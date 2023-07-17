@@ -1,17 +1,19 @@
 package com.dia.delievery.order.entity;
 
 import com.dia.delievery.common.entity.Timestamped;
+import com.dia.delievery.productorder.entity.ProductOrders;
 import com.dia.delievery.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
-@Table(name = "order")
 public class Orders extends Timestamped {
 
     @Id
@@ -19,7 +21,7 @@ public class Orders extends Timestamped {
     private Long id;
 
     @Column(nullable = false)
-    private Integer oderNum;
+    private Integer orderNum;
 
     @Column(nullable = false)
     private String orderStatus;
@@ -27,4 +29,7 @@ public class Orders extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Users users;
+
+    @OneToMany(mappedBy = "orders")
+    private List<ProductOrders> productOrdersList = new ArrayList<>();
 }

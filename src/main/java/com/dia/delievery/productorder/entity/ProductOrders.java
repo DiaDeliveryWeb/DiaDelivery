@@ -15,8 +15,8 @@ public class ProductOrders {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Products productsList;
+    private Products products;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Orders ordersList;
+    private Orders orders;
 }

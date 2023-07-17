@@ -8,8 +8,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
-@Table(name = "product")
 @NoArgsConstructor
 public class Products {
 
