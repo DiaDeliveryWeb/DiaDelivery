@@ -1,6 +1,6 @@
 package com.dia.delievery.product.entity;
 
-import com.dia.delievery.store.entity.Store;
+import com.dia.delievery.store.entity.Stores;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,14 +11,14 @@ import lombok.Setter;
 @Setter
 @Table(name = "product")
 @NoArgsConstructor
-public class Product {
+public class Products {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String productname;
+    private String productName;
 
     @Column
     private String imageUrl;
@@ -30,10 +30,10 @@ public class Product {
     private int price;
 
     @Column(nullable = false)
-    private String descrption;
+    private String description;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
-    private Store store;
+    private Stores stores;
 }

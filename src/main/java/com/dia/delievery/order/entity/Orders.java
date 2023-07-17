@@ -1,7 +1,7 @@
 package com.dia.delievery.order.entity;
 
 import com.dia.delievery.common.entity.Timestamped;
-import com.dia.delievery.user.entity.User;
+import com.dia.delievery.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "order")
-public class Order extends Timestamped {
+public class Orders extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +26,5 @@ public class Order extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Users users;
 }

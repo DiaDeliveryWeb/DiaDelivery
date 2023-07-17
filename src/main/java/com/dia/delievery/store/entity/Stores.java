@@ -1,8 +1,8 @@
 package com.dia.delievery.store.entity;
 
-import com.dia.delievery.product.entity.Product;
-import com.dia.delievery.review.entity.Review;
-import com.dia.delievery.user.entity.User;
+import com.dia.delievery.product.entity.Products;
+import com.dia.delievery.review.entity.Reviews;
+import com.dia.delievery.user.entity.Users;
 import com.dia.delievery.userscrapstore.entity.UserScrapStore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Store {
+public class Stores {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,12 +28,12 @@ public class Store {
     @Column
     private String Category;
 
-    @OneToMany(mappedBy = "store")
-    private List<Product> productList = new ArrayList<>();
-    @OneToMany(mappedBy = "store")
-    private List<Review> reviewList = new ArrayList<>();
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "stores")
+    private List<Products> productsList = new ArrayList<>();
+    @OneToMany(mappedBy = "stores")
+    private List<Reviews> reviewsList = new ArrayList<>();
+    @OneToMany(mappedBy = "stores")
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Users users;
 }

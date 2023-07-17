@@ -1,7 +1,7 @@
 package com.dia.delievery.review.entity;
 
-import com.dia.delievery.store.entity.Store;
-import com.dia.delievery.user.entity.User;
+import com.dia.delievery.store.entity.Stores;
+import com.dia.delievery.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Review {
+public class Reviews {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +22,7 @@ public class Review {
     private double rate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Users users;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Store store;
+    private Stores stores;
 }

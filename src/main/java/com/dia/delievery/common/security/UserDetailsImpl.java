@@ -2,7 +2,7 @@ package com.dia.delievery.common.security;
 
 
 import com.dia.delievery.user.UserRoleEnum;
-import com.dia.delievery.user.entity.User;
+import com.dia.delievery.user.entity.Users;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,33 +12,33 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private final User user;
+    private final Users users;
 
-    public UserDetailsImpl(User user) {
-        this.user = user;
+    public UserDetailsImpl(Users users) {
+        this.users = users;
     }
 
-    public User getUser() {
-        return user;
+    public Users getUser() {
+        return users;
     }
 
     public String getRole(){
-        return user.getRole().toString();
+        return users.getRole().toString();
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return users.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return users.getUsername();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = user.getRole();
+        UserRoleEnum role = users.getRole();
         String authority = role.getAuthority();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);

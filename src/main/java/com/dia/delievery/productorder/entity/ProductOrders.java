@@ -1,25 +1,22 @@
 package com.dia.delievery.productorder.entity;
 
-import com.dia.delievery.order.entity.Order;
-import com.dia.delievery.product.entity.Product;
+import com.dia.delievery.order.entity.Orders;
+import com.dia.delievery.product.entity.Products;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @NoArgsConstructor
 @Getter
-public class ProductOrder {
+public class ProductOrders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Product productList;
+    private Products productsList;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Order orderList;
+    private Orders ordersList;
 }

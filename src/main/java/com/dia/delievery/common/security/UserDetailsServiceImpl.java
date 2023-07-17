@@ -1,7 +1,7 @@
 package com.dia.delievery.common.security;
 
 
-import com.dia.delievery.user.entity.User;
+import com.dia.delievery.user.entity.Users;
 import com.dia.delievery.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,9 +19,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        Users users = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
 
-        return new UserDetailsImpl(user);
+        return new UserDetailsImpl(users);
     }
 }

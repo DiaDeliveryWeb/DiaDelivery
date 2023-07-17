@@ -1,14 +1,13 @@
 package com.dia.delievery.user.entity;
 
-import com.dia.delievery.order.entity.Order;
-import com.dia.delievery.review.entity.Review;
-import com.dia.delievery.store.entity.Store;
+import com.dia.delievery.order.entity.Orders;
+import com.dia.delievery.review.entity.Reviews;
+import com.dia.delievery.store.entity.Stores;
 import com.dia.delievery.user.UserRoleEnum;
 import com.dia.delievery.userscrapstore.entity.UserScrapStore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,12 +32,12 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Store> storeList = new ArrayList<>();
-    @OneToMany(mappedBy = "user")
-    private List<Review> reviewList = new ArrayList<>();
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "users")
+    private List<Stores> storesList = new ArrayList<>();
+    @OneToMany(mappedBy = "users")
+    private List<Reviews> reviewsList = new ArrayList<>();
+    @OneToMany(mappedBy = "users")
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
-    @OneToMany(mappedBy = "user")
-    private List<Order> orderList = new ArrayList<>();
+    @OneToMany(mappedBy = "users")
+    private List<Orders> ordersList = new ArrayList<>();
 }

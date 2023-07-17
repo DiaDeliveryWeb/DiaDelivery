@@ -1,13 +1,10 @@
 package com.dia.delievery.userscrapstore.entity;
 
-import com.dia.delievery.store.entity.Store;
-import com.dia.delievery.user.entity.User;
+import com.dia.delievery.store.entity.Stores;
+import com.dia.delievery.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -18,7 +15,7 @@ public class UserScrapStore {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Users users;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Store store;
+    private Stores stores;
 }
