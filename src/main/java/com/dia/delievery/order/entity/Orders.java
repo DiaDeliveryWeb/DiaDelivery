@@ -25,6 +25,6 @@ public class Orders extends Timestamped {
     private String orderStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Users users;
 }
