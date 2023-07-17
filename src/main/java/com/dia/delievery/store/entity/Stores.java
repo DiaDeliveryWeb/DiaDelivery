@@ -36,4 +36,5 @@ public class Stores {
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
     private Users users;
+//    aa
 }
