@@ -10,8 +10,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "order")
 @NoArgsConstructor
+@Table(name = "order")
 public class Order extends Timestamped {
 
     @Id
@@ -24,8 +24,7 @@ public class Order extends Timestamped {
     @Column(nullable = false)
     private String orderStatus;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
