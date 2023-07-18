@@ -72,18 +72,9 @@ public class UserService {
         }
     }
 
-    public void delete(AuthRequestDto requestDto){
-        String username = requestDto.getUsername();
-        String password = requestDto.getPassword();
-
-        Users user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-        );
-
-        if(!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+             public void delete(Users user) {
+            userRepository.delete(user);
         }
-             userRepository.delete(user);}
 
 
     //사용자 정보 변경

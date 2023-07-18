@@ -1,4 +1,4 @@
-package com.dia.delivery.user.dto;
+package com.dia.delivery.common.advice;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
