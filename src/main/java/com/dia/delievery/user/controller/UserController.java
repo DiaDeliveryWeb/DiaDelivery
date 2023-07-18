@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-//@Controller-> 앞단 완료되면 바꿀 예정
-@RestController
+@Controller//-> 앞단 완료되면 바꿀 예정
+//@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
