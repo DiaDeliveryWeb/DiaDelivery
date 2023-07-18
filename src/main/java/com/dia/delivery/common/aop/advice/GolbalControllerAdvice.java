@@ -1,4 +1,4 @@
-package com.dia.delievery.common.advice;
+package com.dia.delivery.common.aop.advice;
 
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
