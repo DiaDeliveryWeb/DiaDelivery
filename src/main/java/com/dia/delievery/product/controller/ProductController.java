@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ProductController {
@@ -15,7 +17,7 @@ public class ProductController {
     private final ProductService productService;
     @PostMapping("/products")
     public void addProducts(@RequestParam Long storeId,
-                            @RequestBody ProductRequestDto requestDto,
+                            @RequestBody List<ProductRequestDto> requestDto,
                             @AuthenticationPrincipal UserDetailsImpl userDetails){
         productService.addProducts(storeId,requestDto,userDetails.getUser());
     }

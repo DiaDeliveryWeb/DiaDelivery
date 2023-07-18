@@ -33,7 +33,7 @@ public class Products {
     @JoinColumn(nullable = false)
     private Stores stores;
 
-    public Products(ProductRequestDto requestDto, Stores stores) {
+    public Products(ProductRequestDto requestDto,Stores stores) {
         this.productName = requestDto.getProductName();
         this.imageUrl = requestDto.getImageUrl();
         this.price = requestDto.getPrice();

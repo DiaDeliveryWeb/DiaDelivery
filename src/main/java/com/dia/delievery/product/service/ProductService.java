@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -19,17 +22,20 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     @Transactional
-    public ProductResponseDto addProducts(Long storeId, ProductRequestDto requestDto, Users user) {
+    public List<ProductResponseDto> addProducts(Long storeId,List<ProductRequestDto> requestDto, Users user) {
         Stores store=storeRepository.findById(storeId).orElseThrow(()-> new IllegalArgumentException("음식점이 존재하지 않습니다."));
 
         if(user.getRole().equals("USER")){
             throw new IllegalArgumentException("상품 등록 권한이 없습니다.");
         }
-        Products product= new Products(requestDto,store);
+        List<ProductResponseDto> productResponseDtoList=new ArrayList<>();
 
-        productRepository.save(product);
+        for(ProductRequestDto oneProduct : requestDto){
+            Products product = new Products(oneProduct,store);
+            productResponseDtoList.add(new ProductResponseDto(productRepository.save(product)));
+        }
 
-        return new ProductResponseDto(product);
+        return productResponseDtoList;
     }
 
     @Transactional

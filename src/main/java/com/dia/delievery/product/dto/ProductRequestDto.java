@@ -1,7 +1,6 @@
 package com.dia.delievery.product.dto;
 
 import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,7 @@ public class ProductRequestDto {
     private int price;
     private String description;
 
-//    private List<ProductRequestDto> ProductRequestDtoList;
+    private List<ProductRequestDto> ProductRequestDtoList= new ArrayList<>();
 
 
 }
