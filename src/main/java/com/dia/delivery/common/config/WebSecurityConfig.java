@@ -27,7 +27,7 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final ObjectMapper objectMapper;
-
+    // 수정된 부분
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
