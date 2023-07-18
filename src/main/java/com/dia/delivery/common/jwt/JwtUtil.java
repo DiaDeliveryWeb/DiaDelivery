@@ -53,6 +53,15 @@ public class JwtUtil {
                         .compact();
     }
 
+    // header 토큰을 가져오기 Keys.hmacShaKeyFor(bytes);
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken= request.getHeader(AUTHORIZATION_HEADER);
+        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)){
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
     // header 에서 JWT 가져오기
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
