@@ -24,8 +24,8 @@ public class Users {
     private String username;
     @Column
     private String password;
-    @Column
-    private String email;
+//    @Column
+//    private String email;
     @Column
     private int point;
     @Column
@@ -40,4 +40,10 @@ public class Users {
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
     @OneToMany(mappedBy = "users")
     private List<Orders> ordersList = new ArrayList<>();
+
+    public Users(String username, String password, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
 }

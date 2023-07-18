@@ -22,9 +22,6 @@ public class Products {
     private String imageUrl;
 
     @Column(nullable = false)
-    private String link;
-
-    @Column(nullable = false)
     private int price;
 
     @Column(nullable = false)
@@ -34,4 +31,10 @@ public class Products {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Stores stores;
+
+    public Products (String productName, int price, String description) {
+        this.productName = productName;
+        this.price = price;
+        this.description = description;
+    }
 }

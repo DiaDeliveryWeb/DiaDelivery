@@ -1,0 +1,34 @@
+package com.dia.delievery.user.service;
+
+import com.dia.delievery.user.UserRoleEnum;
+import com.dia.delievery.user.dto.SignUpRequestDto;
+import com.dia.delievery.user.entity.Users;
+import com.dia.delievery.user.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@AllArgsConstructor
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    public void signup(SignUpRequestDto requestDto) {
+        String username = requestDto.getUsername();
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        UserRoleEnum role = requestDto.getRole();
+
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 유저");
+        }
+
+        Users user = new Users(username, password, role); // 이메일 추가
+        userRepository.save(user);
+    }
+
+}
