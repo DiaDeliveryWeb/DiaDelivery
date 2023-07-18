@@ -2,6 +2,7 @@ package com.dia.delievery.store.entity;
 
 import com.dia.delievery.product.entity.Products;
 import com.dia.delievery.review.entity.Reviews;
+import com.dia.delievery.store.dto.StoreRequestDto;
 import com.dia.delievery.user.entity.Users;
 import com.dia.delievery.userscrapstore.entity.UserScrapStore;
 import jakarta.persistence.*;
@@ -26,9 +27,9 @@ public class Stores {
     @Column
     private String imageUrl;
     @Column
-    private String Category;
+    private String category;
 
-    @OneToMany(mappedBy = "stores")
+    @OneToMany(mappedBy = "stores", orphanRemoval = true)
     private List<Products> productsList = new ArrayList<>();
     @OneToMany(mappedBy = "stores")
     private List<Reviews> reviewsList = new ArrayList<>();
@@ -36,5 +37,12 @@ public class Stores {
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
     @ManyToOne(fetch = FetchType.LAZY)
     private Users users;
-//    aa
+
+    public Stores(StoreRequestDto requestDto){
+        this.name = requestDto.getName();
+        this.introduction = requestDto.getIntroduction();
+        this.imageUrl = requestDto.getImageUrl();
+        this.category = requestDto.getCategory();
+        this.productsList = requestDto.getRequestDtoList().stream().map(Products::new).toList();
+    }
 }

@@ -1,5 +1,7 @@
 package com.dia.delievery.review.entity;
 
+import com.dia.delievery.order.entity.Orders;
+import com.dia.delievery.review.dto.ReviewRequestDto;
 import com.dia.delievery.store.entity.Stores;
 import com.dia.delievery.user.entity.Users;
 import jakarta.persistence.*;
@@ -25,4 +27,22 @@ public class Reviews {
     private Users users;
     @ManyToOne(fetch = FetchType.LAZY)
     private Stores stores;
+
+    @OneToOne
+    private Orders orders;
+
+    public Reviews(ReviewRequestDto requestDto, Users users, Stores stores, Orders orders){
+        this.content = requestDto.getContent();
+        this.imageUrl = requestDto.getImageUrl();
+        this.rate = requestDto.getRate();
+        this.users = users;
+        this.stores = stores;
+        this.orders = orders;
+    }
+
+    public void update(ReviewRequestDto requestDto) {
+        this.content = requestDto.getContent();
+        this.imageUrl = requestDto.getImageUrl();
+        this.rate = requestDto.getRate();
+    }
 }
