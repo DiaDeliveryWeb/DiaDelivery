@@ -5,7 +5,6 @@ import com.dia.delievery.store.entity.Stores;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class StoreCreateResponseDto { // 가게 등록 ResponseDto

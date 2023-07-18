@@ -5,7 +5,6 @@ import com.dia.delievery.user.dto.SignUpRequestDto;
 import com.dia.delievery.user.entity.Users;
 import com.dia.delievery.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

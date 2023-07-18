@@ -5,7 +5,6 @@ import com.dia.delievery.store.dto.*;
 import com.dia.delievery.store.entity.Stores;
 import com.dia.delievery.store.repository.StoreRepository;
 import com.dia.delievery.user.entity.Users;
-import jdk.swing.interop.SwingInterOpUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<StoreOneResponseDto> getStore(String name) {
-        Stores store = storeRepository.findByName(name);
+        Stores store = findStore(name);
         StoreOneResponseDto storeOneResponseDto = new StoreOneResponseDto(store);
         return new ResponseEntity<>(storeOneResponseDto, HttpStatus.OK);
     }
@@ -48,7 +47,7 @@ public class StoreService {
         if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
             throw new IllegalArgumentException("소유자, 관리자만 가게를 수정할 수 있습니다.");
         }
-        Stores store = storeRepository.findByName(name);
+        Stores store = findStore(name);
         store.update(requestDto);
         StoreResponseDto storeResponseDto = new StoreResponseDto(store);
         return new ResponseEntity<>(storeResponseDto, HttpStatus.OK);
@@ -59,7 +58,7 @@ public class StoreService {
         if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
             throw new IllegalArgumentException("소유자, 관리자만 가게를 삭제할 수 있습니다.");
         }
-        Stores store = storeRepository.findByName(name);
+        Stores store = findStore(name);
         storeRepository.delete(store);
         ApiResponseDto apiResponseDto = new ApiResponseDto("가게 삭제 완료", HttpStatus.OK.value());
         return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
@@ -68,5 +67,13 @@ public class StoreService {
     @Transactional(readOnly = true)
     public List<StoreResponseDto> getStoresByCategory(String name) {
         return storeRepository.findByCategory(name).stream().map(StoreResponseDto::new).toList();
+    }
+
+    public Stores findStore(String name) {
+        Stores store = storeRepository.findByName(name);
+        if (store == null) {
+            throw new IllegalArgumentException("해당하는 가게가 없습니다.");
+        }
+        return store;
     }
 }
