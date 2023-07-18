@@ -1,11 +1,14 @@
 package com.dia.delivery.user.service;
 
 import com.dia.delivery.common.jwt.JwtUtil;
+import com.dia.delivery.common.security.UserDetailsImpl;
 import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.AuthRequestDto;
 import com.dia.delivery.user.entity.Users;
+import com.dia.delivery.user.exception.MessagingException;
 import com.dia.delivery.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -78,9 +81,21 @@ public class UserService {
 
 
     //사용자 정보 변경
-    public void change(AuthRequestDto requestDto) {
+    public void changeUserInformation(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
     }
+
+  /*  public String sendMail(String email) throws MessagingException {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            String authCode = createCode();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            mimeMessageHelper.setTo(email); // 메일 수신자
+            mimeMessageHelper.setSubject("이메일 인증을 위한 인증 코드 발송"); // 메일 제목
+            mimeMessageHelper.setText(authCode); // 인증 코드
+            javaMailSender.send(mimeMessage);
+            return authCode;
+        }
+    }*/
 }
 
 

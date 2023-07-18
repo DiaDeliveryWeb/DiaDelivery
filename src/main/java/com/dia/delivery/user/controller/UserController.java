@@ -50,6 +50,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원가입 성공", 200));
     }
 
+    /*@PostMapping("/user/email-auth")
+    public ResponseEntity<ApiResponseDto> sendMail(@RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
+         userService.sendMail(requestDto.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("이메일보내기 성공", 200));
+    }*/
+
+
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
     @ResponseBody
@@ -66,14 +73,14 @@ public class UserController {
     //회원정보 변경
 
     @PutMapping("/inform")
-    public ResponseEntity<ApiResponseDto> changeUserInformation(@RequestBody AuthRequestDto requestDto, HttpServletResponse response){
+    public ResponseEntity<ApiResponseDto> changeUserInformation(@AuthenticationPrincipal UserDetailsImpl userDetails){
 
         try {
-            userService.change(requestDto);
+            userService.changeUserInformation(userDetails);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponseDto("회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST.value()));
         }
-        return ResponseEntity.ok().body(new ApiResponseDto("회원탈퇴 완료", HttpStatus.CREATED.value()));
+        return ResponseEntity.ok().body(new ApiResponseDto("회원수정 완료", HttpStatus.CREATED.value()));
 
     }
 
