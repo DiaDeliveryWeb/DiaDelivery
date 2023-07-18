@@ -40,4 +40,11 @@ public class Users {
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
     @OneToMany(mappedBy = "users")
     private List<Orders> ordersList = new ArrayList<>();
+
+    public Users(String username, String password, String email, UserRoleEnum role) {
+        this.username=username;
+        this.password=password;
+        this.email=email;
+        this.role=role;
+    }
 }
