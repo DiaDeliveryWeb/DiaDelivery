@@ -1,6 +1,6 @@
-package com.dia.delievery.store.dto;
+package com.dia.delivery.store.dto;
 
-import com.dia.delievery.product.dto.ProductRequestDto;
+import com.dia.delivery.product.dto.ProductRequestDto;
 import lombok.Getter;
 
 import java.util.List;

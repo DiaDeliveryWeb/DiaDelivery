@@ -1,6 +1,6 @@
-package com.dia.delievery.user.dto;
+package com.dia.delivery.user.dto;
 
-import com.dia.delievery.user.UserRoleEnum;
+import com.dia.delivery.user.UserRoleEnum;
 import lombok.Getter;
 
 @Getter

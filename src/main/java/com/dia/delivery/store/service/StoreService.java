@@ -1,10 +1,10 @@
-package com.dia.delievery.store.service;
+package com.dia.delivery.store.service;
 
-import com.dia.delievery.common.dto.ApiResponseDto;
-import com.dia.delievery.store.dto.*;
-import com.dia.delievery.store.entity.Stores;
-import com.dia.delievery.store.repository.StoreRepository;
-import com.dia.delievery.user.entity.Users;
+import com.dia.delivery.common.dto.ApiResponseDto;
+import com.dia.delivery.store.dto.*;
+import com.dia.delivery.store.entity.Stores;
+import com.dia.delivery.store.repository.StoreRepository;
+import com.dia.delivery.user.entity.Users;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

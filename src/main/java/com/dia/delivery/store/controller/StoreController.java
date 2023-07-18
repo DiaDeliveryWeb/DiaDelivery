@@ -1,9 +1,9 @@
-package com.dia.delievery.store.controller;
+package com.dia.delivery.store.controller;
 
-import com.dia.delievery.common.dto.ApiResponseDto;
-import com.dia.delievery.common.security.UserDetailsImpl;
-import com.dia.delievery.store.dto.*;
-import com.dia.delievery.store.service.StoreService;
+import com.dia.delivery.common.dto.ApiResponseDto;
+import com.dia.delivery.common.security.UserDetailsImpl;
+import com.dia.delivery.store.dto.*;
+import com.dia.delivery.store.service.StoreService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,8 +1,8 @@
-package com.dia.delievery.user.controller;
+package com.dia.delivery.user.controller;
 
-import com.dia.delievery.common.dto.ApiResponseDto;
-import com.dia.delievery.user.dto.SignUpRequestDto;
-import com.dia.delievery.user.service.UserService;
+import com.dia.delivery.common.dto.ApiResponseDto;
+import com.dia.delivery.user.dto.SignUpRequestDto;
+import com.dia.delivery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

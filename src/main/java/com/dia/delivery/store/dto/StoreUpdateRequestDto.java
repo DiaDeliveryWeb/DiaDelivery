@@ -1,4 +1,4 @@
-package com.dia.delievery.store.dto;
+package com.dia.delivery.store.dto;
 
 import lombok.Getter;
 

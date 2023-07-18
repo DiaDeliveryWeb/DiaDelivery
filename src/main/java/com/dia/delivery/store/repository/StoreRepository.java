@@ -1,6 +1,6 @@
-package com.dia.delievery.store.repository;
+package com.dia.delivery.store.repository;
 
-import com.dia.delievery.store.entity.Stores;
+import com.dia.delivery.store.entity.Stores;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

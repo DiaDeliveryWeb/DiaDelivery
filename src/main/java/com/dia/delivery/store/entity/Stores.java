@@ -1,7 +1,10 @@
 package com.dia.delivery.store.entity;
 
+import com.dia.delivery.product.dto.ProductRequestDto;
 import com.dia.delivery.product.entity.Products;
 import com.dia.delivery.review.entity.Reviews;
+import com.dia.delivery.store.dto.StoreRequestDto;
+import com.dia.delivery.store.dto.StoreUpdateRequestDto;
 import com.dia.delivery.user.entity.Users;
 import com.dia.delivery.userscrapstore.entity.UserScrapStore;
 import jakarta.persistence.*;

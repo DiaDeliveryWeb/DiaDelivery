@@ -1,4 +1,4 @@
-package com.dia.delievery.common.dto;
+package com.dia.delivery.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,9 +1,9 @@
-package com.dia.delievery.user.service;
+package com.dia.delivery.user.service;
 
-import com.dia.delievery.user.UserRoleEnum;
-import com.dia.delievery.user.dto.SignUpRequestDto;
-import com.dia.delievery.user.entity.Users;
-import com.dia.delievery.user.repository.UserRepository;
+import com.dia.delivery.user.UserRoleEnum;
+import com.dia.delivery.user.dto.SignUpRequestDto;
+import com.dia.delivery.user.entity.Users;
+import com.dia.delivery.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
