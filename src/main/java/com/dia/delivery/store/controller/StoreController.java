@@ -5,10 +5,13 @@ import com.dia.delivery.common.security.UserDetailsImpl;
 import com.dia.delivery.store.dto.*;
 import com.dia.delivery.store.service.StoreService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,10 +20,12 @@ public class StoreController {
 
     public final StoreService storeService;
 
+
     // 가게 등록
-    @PostMapping("/stores")
-    public ResponseEntity<StoreCreateResponseDto> createStore(@RequestBody StoreRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return storeService.createStore(requestDto, userDetails.getUser());
+    @PostMapping(value = "/stores", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<StoreCreateResponseDto> createStore(@RequestPart StoreRequestDto requestDto, @RequestPart MultipartFile image, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException
+    {
+        return storeService.createStore(requestDto, image, userDetails.getUser());
     }
 
     // 가게 전체 조회
@@ -36,9 +41,10 @@ public class StoreController {
     }
 
     // 가게 수정
-    @PutMapping("/stores")
-    public ResponseEntity<StoreResponseDto> updateStore(@RequestParam String name, @RequestBody StoreUpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return storeService.updateStore(name, requestDto, userDetails.getUser());
+    @PutMapping(value = "/stores", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<StoreResponseDto> updateStore(@RequestParam String name, @RequestPart StoreUpdateRequestDto requestDto, @RequestPart MultipartFile image, @AuthenticationPrincipal UserDetailsImpl userDetails) throws  IOException
+    {
+        return storeService.updateStore(name, requestDto, image, userDetails.getUser());
     }
 
     // 가게 삭제
