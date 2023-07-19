@@ -1,9 +1,9 @@
-package com.dia.delievery.product.controller;
+package com.dia.delivery.product.controller;
 
-import com.dia.delievery.common.security.UserDetailsImpl;
-import com.dia.delievery.product.dto.ProductRequestDto;
-import com.dia.delievery.product.dto.ProductResponseDto;
-import com.dia.delievery.product.service.ProductService;
+import com.dia.delivery.common.security.UserDetailsImpl;
+import com.dia.delivery.product.dto.ProductRequestDto;
+import com.dia.delivery.product.dto.ProductResponseDto;
+import com.dia.delivery.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

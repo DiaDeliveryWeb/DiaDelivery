@@ -1,4 +1,4 @@
-package com.dia.delievery.product.dto;
+package com.dia.delivery.product.dto;
 
 import lombok.Getter;
 import java.util.ArrayList;

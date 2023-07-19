@@ -1,12 +1,12 @@
-package com.dia.delievery.product.service;
+package com.dia.delivery.product.service;
 
-import com.dia.delievery.product.dto.ProductRequestDto;
-import com.dia.delievery.product.dto.ProductResponseDto;
-import com.dia.delievery.product.entity.Products;
-import com.dia.delievery.product.repository.ProductRepository;
-import com.dia.delievery.store.entity.Stores;
-import com.dia.delievery.store.repository.StoreRepository;
-import com.dia.delievery.user.entity.Users;
+import com.dia.delivery.product.dto.ProductRequestDto;
+import com.dia.delivery.product.dto.ProductResponseDto;
+import com.dia.delivery.product.entity.Products;
+import com.dia.delivery.product.repository.ProductRepository;
+import com.dia.delivery.store.entity.Stores;
+import com.dia.delivery.store.repository.StoreRepository;
+import com.dia.delivery.user.entity.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

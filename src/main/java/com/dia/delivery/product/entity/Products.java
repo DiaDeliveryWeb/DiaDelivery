@@ -1,10 +1,10 @@
-package com.dia.delievery.product.entity;
+package com.dia.delivery.product.entity;
 
+import com.dia.delivery.product.dto.ProductRequestDto;
 import com.dia.delivery.store.entity.Stores;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -35,7 +35,7 @@ public class Products {
 
 
 
-    public Products(ProductRequestDto requestDto,Stores stores) {
+    public Products(ProductRequestDto requestDto, Stores stores) {
         this.productName = requestDto.getProductName();
         this.imageUrl = requestDto.getImageUrl();
         this.price = requestDto.getPrice();

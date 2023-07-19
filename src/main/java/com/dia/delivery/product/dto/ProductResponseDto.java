@@ -1,6 +1,6 @@
-package com.dia.delievery.product.dto;
+package com.dia.delivery.product.dto;
 
-import com.dia.delievery.product.entity.Products;
+import com.dia.delivery.product.entity.Products;
 
 public class ProductResponseDto {
     private String storeName;
