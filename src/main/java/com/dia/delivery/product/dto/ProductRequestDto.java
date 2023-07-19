@@ -10,8 +10,4 @@ public class ProductRequestDto {
     private String productName;
     private int price;
     private String description;
-
-    private List<ProductRequestDto> ProductRequestDtoList= new ArrayList<>();
-
-
 }

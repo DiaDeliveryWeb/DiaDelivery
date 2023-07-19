@@ -12,5 +12,4 @@ public class StoreRequestDto {
     private String imageUrl;
     private String category;
     private List<ProductRequestDto> productList;
-
 }
