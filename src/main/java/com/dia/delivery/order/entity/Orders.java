@@ -1,7 +1,9 @@
 package com.dia.delivery.order.entity;
 
 import com.dia.delivery.common.entity.Timestamped;
+import com.dia.delivery.order.OrderStatus;
 import com.dia.delivery.productorder.entity.ProductOrders;
+import com.dia.delivery.review.entity.Reviews;
 import com.dia.delivery.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import static com.dia.delivery.order.OrderStatus.주문생성;
 
 @Entity
 @Getter
@@ -20,10 +24,11 @@ public class Orders extends Timestamped {
     private Long id;
 
     @Column(nullable = false)
-    private Integer orderNum;
+    private String orderNum;
 
     @Column(nullable = false)
-    private String orderStatus;
+    @Enumerated(value = EnumType.STRING)
+    private OrderStatus orderStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -31,4 +36,21 @@ public class Orders extends Timestamped {
 
     @OneToMany(mappedBy = "orders")
     private List<ProductOrders> productOrdersList = new ArrayList<>();
+
+    @OneToOne(mappedBy = "orders", orphanRemoval = true)
+    private Reviews reviews;
+
+    public Orders(Users users){
+        this.users = users;
+        this.orderStatus = 주문생성;
+        this.orderNum = UUID.randomUUID().toString();
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public void deleteReview() {
+        this.reviews = null;
+    }
 }

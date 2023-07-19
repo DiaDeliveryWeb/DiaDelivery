@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +23,7 @@ public class Users {
 
     @Column
     private String username;
+
     @Column //가장 최신 비밀번호
     private String password;
     @Column
@@ -34,6 +34,7 @@ public class Users {
     private String email;
     @Column
     private int point;
+  
     @Column
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -46,6 +47,7 @@ public class Users {
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
     @OneToMany(mappedBy = "users")
     private List<Orders> ordersList = new ArrayList<>();
+
 
     public Users(String username, String password, String password2, String password3, String email, UserRoleEnum role) {
         this.username=username;

@@ -1,20 +1,23 @@
-package com.dia.delivery.common.jwt;
+package com.dia.delivery.common.security;
 
 import com.dia.delivery.common.advice.ApiResponseDto;
 import com.dia.delivery.common.security.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.dia.delivery.common.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -56,9 +59,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(username);
         context.setAuthentication(authentication);
-        // username -> user 조회 -> userDetails 에 담고 -> authentication의 principal 에 담고
-        // -> securityContent 에 담고 -> SecurityContextHolder 에 담고
-        // -> 이제 @AuthenticationPrincipal 로 조회할 수 있음
         SecurityContextHolder.setContext(context);
     }
 
