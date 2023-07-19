@@ -1,5 +1,6 @@
 package com.dia.delivery.product.entity;
 
+import com.dia.delivery.product.dto.ProductRequestDto;
 import com.dia.delivery.store.entity.Stores;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,8 +21,6 @@ public class Products {
     @Column
     private String imageUrl;
 
-    @Column(nullable = false)
-    private String link;
 
     @Column(nullable = false)
     private int price;
@@ -33,4 +32,28 @@ public class Products {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Stores stores;
+
+
+
+    public Products(ProductRequestDto requestDto, Stores stores) {
+        this.productName = requestDto.getProductName();
+        this.imageUrl = requestDto.getImageUrl();
+        this.price = requestDto.getPrice();
+        this.description = requestDto.getDescription();
+        this.stores = stores;
+    }
+
+//    public Products (String productName, int price, String description) {
+//        this.productName = productName;
+//        this.price = price;
+//        this.description = description;
+//    }
+
+    public void update(ProductRequestDto requestDto){
+       this.productName = requestDto.getProductName();
+       this.imageUrl = requestDto.getImageUrl();
+       this.price = requestDto.getPrice();
+       this.description = requestDto.getDescription();
+   }
+
 }
