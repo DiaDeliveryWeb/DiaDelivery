@@ -22,13 +22,19 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final ImageUploader imageUploader;
     @Transactional
-    public ResponseEntity<StoreCreateResponseDto> createStore(StoreRequestDto requestDto, MultipartFile image, Users user) throws IOException {
+    public ResponseEntity<StoreCreateResponseDto> createStore(StoreRequestDto requestDto, MultipartFile storeImage, List<MultipartFile> productsImage, Users user) throws IOException {
         if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
             throw new IllegalArgumentException("소유자, 관리자만 가게를 등록할 수 있습니다.");
         }
-        if (image != null) {
-            String imageUrl = imageUploader.upload(image, "image");
+        if (storeImage != null) {
+            String imageUrl = imageUploader.upload(storeImage, "image");
             requestDto.setImageUrl(imageUrl);
+        }
+        if (productsImage != null){
+            for (int i = 0; i<productsImage.size(); i++){
+                String imageUrl = imageUploader.upload(productsImage.get(i), "image");
+                requestDto.getProductList().get(i).setImageUrl(imageUrl);
+            }
         }
         Stores store = new Stores(requestDto, user);
         System.out.println(store.getImageUrl());
