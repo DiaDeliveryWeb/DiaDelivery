@@ -13,8 +13,9 @@ public class StoreRequestDto {
     private String imageUrl;
     private String category;
     private List<ProductRequestDto> productList;
-
+  
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
 }

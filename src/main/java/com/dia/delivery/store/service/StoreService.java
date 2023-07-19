@@ -31,7 +31,8 @@ public class StoreService {
             requestDto.setImageUrl(imageUrl);
         }
         Stores store = new Stores(requestDto, user);
-        store.addOneProductList(requestDto);
+        System.out.println(store.getProductsList().get(0).getProductName());
+//        store.addOneProductList(requestDto);
         storeRepository.save(store);
         StoreCreateResponseDto storeCreateResponseDto = new StoreCreateResponseDto(store);
         return new ResponseEntity<>(storeCreateResponseDto, HttpStatus.OK);
