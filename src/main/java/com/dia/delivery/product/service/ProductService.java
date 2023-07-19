@@ -1,6 +1,7 @@
 package com.dia.delivery.product.service;
 
 import com.dia.delivery.common.dto.ApiResponseDto;
+import com.dia.delivery.common.image.ImageUploader;
 import com.dia.delivery.product.dto.ProductRequestListDto;
 import com.dia.delivery.product.dto.ProductRequestDto;
 import com.dia.delivery.product.dto.ProductResponseDto;
@@ -14,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +27,18 @@ public class ProductService {
 
     private final StoreRepository storeRepository;
     private final ProductRepository productRepository;
+    private final ImageUploader imageUploader;
 
     @Transactional
-    public List<ProductResponseDto> addProducts(Long storeId, ProductRequestListDto requestDto, Users user) {
+    public List<ProductResponseDto> addProducts(Long storeId, ProductRequestListDto requestDto, Users user,List<MultipartFile> image) throws IOException {
         Stores store=storeRepository.findById(storeId).orElseThrow(()-> new IllegalArgumentException("음식점이 존재하지 않습니다."));
+
+        if (image != null) {
+            for (int i = 0; i<image.size(); i++){
+                String imageUrl = imageUploader.upload(image.get(i), "image");
+                requestDto.getProductList().get(i).setImageUrl(imageUrl);
+            }
+        }
 
         if(user.getRole().getAuthority().equals("ROLE_USER")){
             throw new IllegalArgumentException("상품 등록 권한이 없습니다.");
@@ -43,8 +54,13 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto updateProduct(Long productId, ProductRequestDto requestDto, Users user) {
+    public ProductResponseDto updateProduct(Long productId, ProductRequestDto requestDto, Users user, MultipartFile image) throws IOException {
         Products product= productRepository.findById(productId).orElseThrow(()->new IllegalArgumentException("상품이 존재하지 않습니다"));
+
+        if (image != null){
+            String imageUrl = imageUploader.upload(image, "image");
+            requestDto.setImageUrl(imageUrl);
+        }
 
         if(user.getRole().getAuthority().equals("ROLE_USER")){
             throw new IllegalArgumentException("상품 수정 권한이 없습니다.");

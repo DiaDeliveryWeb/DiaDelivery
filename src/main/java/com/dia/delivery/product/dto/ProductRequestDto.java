@@ -8,4 +8,8 @@ public class ProductRequestDto {
     private String productName;
     private int price;
     private String description;
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
