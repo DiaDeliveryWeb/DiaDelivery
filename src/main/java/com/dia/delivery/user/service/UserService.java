@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RequiredArgsConstructor
 @Service
 
@@ -27,6 +30,8 @@ public class UserService {
     public void signup(AuthRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
+        String password2 = null;
+        String password3 = null;
 
         // 사용자 이름 중복 확인
          if(userRepository.findByUsername(username).isPresent()){
@@ -54,7 +59,7 @@ public class UserService {
         }
 
         // 사용자 등록
-        Users user = new Users(username, password, email, role);
+        Users user = new Users(username, password, password2, password3, email, role);
         userRepository.save(user);}
 
 
@@ -85,17 +90,30 @@ public class UserService {
     //사용자 정보 변경
   public void changeUserPassword(Long id, LoginRequestDto requestDto) {
 
-        String password = requestDto.getPassword();
-        Users user = userRepository.findById(id).orElseThrow(
+      String newPW = requestDto.getPassword();
+      Users user = userRepository.findById(id).orElseThrow(
               () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-         );
-            //이전에 사용한 password(최근 3번)는 변경할 수 없다.
-        if(passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하면 변경이 안됩니다.");
-        }else{
-            user.setPassword(password);
-        }
+      );
 
+      Map<String,String> map = new HashMap<String,String>();
+      map.put("pw",user.getPassword());
+      map.put("pw2",user.getPassword2());
+      map.put("pw3",user.getPassword3());
+
+      for(Map.Entry<String, String> entry : map.entrySet()){
+          if(!(entry.getValue() == null)) {
+              if (passwordEncoder.matches(newPW, entry.getValue())) {
+                  throw new IllegalArgumentException("비밀번호가 일치하면 변경이 안됩니다.");
+              }
+          }else{
+              break;
+          }
+      }
+
+      user.setPassword3(map.get("pw2"));
+      String test = map.get("pw");
+      user.setPassword2(map.get("pw"));
+      user.setPassword(passwordEncoder.encode(newPW));
 
         userRepository.save(user);
     }

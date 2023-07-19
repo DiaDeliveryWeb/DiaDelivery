@@ -12,4 +12,6 @@ public class LoginRequestDto {
     private Long id;
     private String password;
     private String email;
+
+
 }
