@@ -8,4 +8,8 @@ public class StoreUpdateRequestDto {
     private String introduction;
     private String imageUrl;
     private String category;
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
