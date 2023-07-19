@@ -29,7 +29,7 @@ public class ProductService {
     public List<ProductResponseDto> addProducts(Long storeId, ProductRequestListDto requestDto, Users user) {
         Stores store=storeRepository.findById(storeId).orElseThrow(()-> new IllegalArgumentException("음식점이 존재하지 않습니다."));
 
-        if(user.getRole().equals("USER")){
+        if(user.getRole().getAuthority().equals("ROLE_USER")){
             throw new IllegalArgumentException("상품 등록 권한이 없습니다.");
         }
         List<ProductResponseDto> productResponseDtoList=new ArrayList<>();
@@ -46,7 +46,7 @@ public class ProductService {
     public ProductResponseDto updateProduct(Long productId, ProductRequestDto requestDto, Users user) {
         Products product= productRepository.findById(productId).orElseThrow(()->new IllegalArgumentException("상품이 존재하지 않습니다"));
 
-        if(user.getRole().equals("USER")){
+        if(user.getRole().getAuthority().equals("ROLE_USER")){
             throw new IllegalArgumentException("상품 수정 권한이 없습니다.");
         }
 
@@ -58,7 +58,7 @@ public class ProductService {
     public ResponseEntity<ApiResponseDto> deleteProduct(Long productId, Users user) {
         Products product=productRepository.findById(productId).orElseThrow(()->new IllegalArgumentException("상품이 존재하지 않습니다"));
 
-        if(user.getRole().equals("USER")){
+        if(user.getRole().getAuthority().equals("ROLE_USER")){
             throw new IllegalArgumentException("상품 삭제 권한이 없습니다.");
         }
         ApiResponseDto apiResponseDto = new ApiResponseDto("상품 삭제 완료", HttpStatus.OK.value());
