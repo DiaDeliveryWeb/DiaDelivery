@@ -4,11 +4,10 @@ import com.dia.delivery.common.jwt.JwtUtil;
 import com.dia.delivery.common.security.UserDetailsImpl;
 import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.AuthRequestDto;
+import com.dia.delivery.user.dto.LoginRequestDto;
 import com.dia.delivery.user.entity.Users;
-import com.dia.delivery.user.exception.MessagingException;
 import com.dia.delivery.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +59,7 @@ public class UserService {
 
 
 
-    public void login(AuthRequestDto requestDto) {
+    public void login(LoginRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
 
@@ -75,14 +74,30 @@ public class UserService {
         }
     }
 
-             public void delete(Users user) {
-            userRepository.delete(user);
+             public void delete(Long id) {
+            //     Users users = userRepository.findById(id).orElseThrow(
+              //           () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+               //  );
+        userRepository.deleteById(id);
         }
 
 
     //사용자 정보 변경
-    public void changeUserInformation(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+  public void changeUserPassword(Long id, LoginRequestDto requestDto) {
 
+        String password = requestDto.getPassword();
+        Users user = userRepository.findById(id).orElseThrow(
+              () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+         );
+            //이전에 사용한 password(최근 3번)는 변경할 수 없다.
+        if(passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하면 변경이 안됩니다.");
+        }else{
+            user.setPassword(password);
+        }
+
+
+        userRepository.save(user);
     }
 
   /*  public String sendMail(String email) throws MessagingException {

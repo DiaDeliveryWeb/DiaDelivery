@@ -29,12 +29,14 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @GetMapping("/user/login")
-    public String loginPage() {
-        return "login";
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponseDto> login(@RequestBody LoginRequestDto requestDto) {
+        userService.login(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("로그인 성공", 200));
+
     }
 
-    @PostMapping("/user/signup")
+    @PostMapping("/signup")
     public ResponseEntity<ApiResponseDto> signup(@RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -72,14 +74,10 @@ public class UserController {
 
     //회원정보 변경
 
-    @PutMapping("/inform")
-    public ResponseEntity<ApiResponseDto> changeUserInformation(@AuthenticationPrincipal UserDetailsImpl userDetails){
-
-        try {
-            userService.changeUserInformation(userDetails);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(new ApiResponseDto("회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST.value()));
-        }
+    @PutMapping("/inform/{id}")
+    public ResponseEntity<ApiResponseDto> changeUserPassword(@PathVariable Long id,  @RequestBody LoginRequestDto requestDto){
+        //비밀번호는 사용자에게 노출되면 안되니까 body로 받는다.
+          userService.changeUserPassword(id,requestDto);
         return ResponseEntity.ok().body(new ApiResponseDto("회원수정 완료", HttpStatus.CREATED.value()));
 
     }
@@ -87,9 +85,9 @@ public class UserController {
     //회원탈퇴
 
 
-    @DeleteMapping("/withdraw")
-    public ResponseEntity<ApiResponseDto> delete(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        userService.delete(userDetails.getUser());
+    @DeleteMapping("/withdraw/{id}")
+    public ResponseEntity<ApiResponseDto> delete(@PathVariable Long id){
+        userService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원탈퇴 완료", 200));
 
     }
