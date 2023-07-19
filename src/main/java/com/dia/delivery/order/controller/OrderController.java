@@ -10,13 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class OrderController {
     private final OrderService orderService;
 
-
+    @GetMapping("/orders")
+    public List<OrderResponseDto> findAll(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return orderService.findAll(userDetails.getUser());
+    }
     @PostMapping("/orders")
     public OrderResponseDto save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody OrderRequestDto requestDto){
         return orderService.save(userDetails.getUser(), requestDto);

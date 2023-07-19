@@ -1,6 +1,7 @@
 package com.dia.delivery.order.dto;
 
 import com.dia.delivery.order.OrderStatus;
+import com.dia.delivery.order.entity.Orders;
 import com.dia.delivery.product.dto.ProductResponseDto;
 import com.dia.delivery.product.entity.Products;
 import lombok.Getter;
@@ -19,5 +20,12 @@ public class OrderResponseDto {
         this.username = username;
         this.orderStatus = orderStatus;
         this.productResponseDtos = products.stream().map(ProductResponseDto::new).toList();
+    }
+
+    public OrderResponseDto(Orders orders){
+        this.storeName = orders.getProductOrdersList().get(0).getProducts().getStores().getName();
+        this.username = orders.getUsers().getUsername();
+        this.orderStatus = orders.getOrderStatus();
+        this.productResponseDtos = orders.getProductOrdersList().stream().map((productOrders) -> new ProductResponseDto(productOrders.getProducts())).toList();
     }
 }

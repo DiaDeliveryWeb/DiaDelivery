@@ -42,4 +42,8 @@ public class OrderService {
         Orders orders = orderRepository.findByOrderNum(orderNum).orElseThrow(()->new IllegalArgumentException("해당 주문내역이 없습니다"));
         orders.setOrderStatus(OrderStatus.주문취소);
     }
+
+    public List<OrderResponseDto> findAll(Users user) {
+        return orderRepository.findAllByUsers(user).stream().map(OrderResponseDto::new).toList();
+    }
 }

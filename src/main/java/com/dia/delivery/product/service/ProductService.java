@@ -22,7 +22,6 @@ public class ProductService {
         Stores stores = storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("해당 가게가 존재하지 않습니다."));
         return new ProductResponseDto(productRepository.save(new Products(requestDto, stores)));
     }
-
     public ProductResponseDto update(Users user, Long productId, ProductRequestDto requestDto) {
         Products products = productRepository.findById(productId).orElseThrow(()->new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
         products.update(requestDto);
