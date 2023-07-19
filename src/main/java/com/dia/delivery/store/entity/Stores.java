@@ -31,7 +31,7 @@ public class Stores {
     @Column
     private String category;
 
-    @OneToMany(mappedBy = "stores")
+    @OneToMany(mappedBy = "stores", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Products> productsList = new ArrayList<>();
     @OneToMany(mappedBy = "stores")
     private List<Reviews> reviewsList = new ArrayList<>();
@@ -48,6 +48,7 @@ public class Stores {
         this.imageUrl = requestDto.getImageUrl();
         this.category = requestDto.getCategory();
         this.users = user;
+        this.productsList = requestDto.getProductList().stream().map((request) -> new Products(request, this)).toList();
     }
 
     public void update(StoreUpdateRequestDto requestDto) {
@@ -55,14 +56,5 @@ public class Stores {
         this.introduction = requestDto.getIntroduction();
         this.imageUrl = requestDto.getImageUrl();
         this.category = requestDto.getCategory();
-    }
-
-    public void addOneProductList(StoreRequestDto requestDto) {
-        ProductRequestDto req = requestDto.getProductList().get(0);
-        String productName = req.getProductName();
-        int price = req.getPrice();
-        String description = req.getDescription();
-        Products product = new Products(productName, price, description);
-        this.productsList.add(product);
     }
 }

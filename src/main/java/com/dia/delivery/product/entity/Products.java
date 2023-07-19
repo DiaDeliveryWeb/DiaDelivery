@@ -43,18 +43,17 @@ public class Products {
         this.stores = stores;
     }
 
-   public void update(ProductRequestDto requestDto){
+//    public Products (String productName, int price, String description) {
+//        this.productName = productName;
+//        this.price = price;
+//        this.description = description;
+//    }
+
+    public void update(ProductRequestDto requestDto){
        this.productName = requestDto.getProductName();
        this.imageUrl = requestDto.getImageUrl();
        this.price = requestDto.getPrice();
        this.description = requestDto.getDescription();
    }
 
-
-
-    public Products (String productName, int price, String description) {
-        this.productName = productName;
-        this.price = price;
-        this.description = description;
-    }
 }

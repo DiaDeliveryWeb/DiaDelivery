@@ -24,7 +24,8 @@ public class StoreService {
             throw new IllegalArgumentException("소유자, 관리자만 가게를 등록할 수 있습니다.");
         }
         Stores store = new Stores(requestDto, user);
-        store.addOneProductList(requestDto);
+        System.out.println(store.getProductsList().get(0).getProductName());
+//        store.addOneProductList(requestDto);
         storeRepository.save(store);
         StoreCreateResponseDto storeCreateResponseDto = new StoreCreateResponseDto(store);
         return new ResponseEntity<>(storeCreateResponseDto, HttpStatus.OK);
