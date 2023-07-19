@@ -23,9 +23,12 @@ public class StoreController {
 
     // 가게 등록
     @PostMapping(value = "/stores", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<StoreCreateResponseDto> createStore(@RequestPart StoreRequestDto requestDto, @RequestPart MultipartFile image, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException
+    public ResponseEntity<StoreCreateResponseDto> createStore(@RequestPart StoreRequestDto requestDto,
+                                                              @RequestPart(required = false) List<MultipartFile> productsImage,
+                                                              @RequestPart(required = false) MultipartFile storeImage,
+                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException
     {
-        return storeService.createStore(requestDto, image, userDetails.getUser());
+        return storeService.createStore(requestDto, storeImage, productsImage, userDetails.getUser());
     }
 
     // 가게 전체 조회

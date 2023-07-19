@@ -1,8 +1,7 @@
 package com.dia.delivery.product.dto;
 
 import lombok.Getter;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class ProductRequestDto {
@@ -10,4 +9,8 @@ public class ProductRequestDto {
     private String productName;
     private int price;
     private String description;
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
