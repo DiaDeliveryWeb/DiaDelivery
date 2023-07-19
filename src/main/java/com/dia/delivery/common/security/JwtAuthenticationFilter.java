@@ -3,6 +3,7 @@ package com.dia.delivery.common.security;
 
 import com.dia.delivery.common.jwt.JwtUtil;
 import com.dia.delivery.user.UserRoleEnum;
+import com.dia.delivery.user.dto.AuthRequestDto;
 import com.dia.delivery.user.dto.LoginRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -15,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import java.io.IOException;
 import java.net.URLEncoder;
 
@@ -31,8 +31,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
-
+            AuthRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), AuthRequestDto.class);
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestDto.getUsername(),

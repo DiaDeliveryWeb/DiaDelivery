@@ -18,9 +18,10 @@ public class UserScrapStore {
     private Users users;
     @ManyToOne(fetch = FetchType.LAZY)
     private Stores stores;
-
+  
     public UserScrapStore(Users user, Stores stores) {
         this.users = user;
         this.stores = stores;
     }
 }
+

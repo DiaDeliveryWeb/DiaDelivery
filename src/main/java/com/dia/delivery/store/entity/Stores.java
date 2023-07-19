@@ -33,8 +33,10 @@ public class Stores {
 
     @OneToMany(mappedBy = "stores", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Products> productsList = new ArrayList<>();
+  
     @OneToMany(mappedBy = "stores")
     private List<Reviews> reviewsList = new ArrayList<>();
+  
     @OneToMany(mappedBy = "stores")
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
 

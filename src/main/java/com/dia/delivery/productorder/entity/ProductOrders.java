@@ -24,5 +24,4 @@ public class ProductOrders {
         this.orders = orders;
         this.products = product;
     }
-
 }
