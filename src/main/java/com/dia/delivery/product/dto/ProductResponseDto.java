@@ -3,11 +3,11 @@ package com.dia.delivery.product.dto;
 import com.dia.delivery.product.entity.Products;
 
 public class ProductResponseDto {
-    private String storeName;
-    private String imageUrl;
-    private String productName;
-    private int price;
-    private String description;
+    public String storeName;
+    public String imageUrl;
+    public String productName;
+    public int price;
+    public String description;
 
     public ProductResponseDto(Products products) {
         this.storeName = products.getStores().getName();
