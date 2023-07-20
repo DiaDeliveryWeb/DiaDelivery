@@ -86,7 +86,6 @@ public class UserController {
         userService.delete(requestDto, userDetails.getUser());
 
     }
-
 }
 
 // @Slf4j
