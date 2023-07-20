@@ -112,7 +112,13 @@ public class StoreService {
     public Stores findStore(String name) {
         Stores store = storeRepository.findByName(name);
         if (store == null) {
-            throw new IllegalArgumentException("해당하는 가게가 없습니다.");
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                    "not.found.store",
+                    null,
+                    "Not Found Store",
+                    Locale.getDefault()
+            ));
         }
         return store;
     }

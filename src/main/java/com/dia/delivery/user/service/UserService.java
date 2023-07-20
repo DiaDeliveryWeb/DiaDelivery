@@ -29,7 +29,7 @@ public class UserService {
 
     // ADMIN_TOKEN
     private final String OWNER_TOKEN = "1111";
-    private final String ADMIN_TOKEN = "2222";
+ //   private final String ADMIN_TOKEN = "2222";
 
 
     public void signup(AuthRequestDto requestDto) {
@@ -39,7 +39,7 @@ public class UserService {
         String password2 = null;
         String password3 = null;
         String email = requestDto.getEmail();
-        int point = requestDto.getPoint();
+    //    int point = requestDto.getPoint();
 
         // 회원 중복 확인
          if(userRepository.findByUsername(username).isPresent()){
@@ -79,7 +79,7 @@ public class UserService {
             role = UserRoleEnum.OWNER;
         }
 
-        if (requestDto.isAdmin()) {
+     /*   if (requestDto.isAdmin()) {
             if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
                 throw new IllegalArgumentException(
                         messageSource.getMessage(
@@ -90,10 +90,10 @@ public class UserService {
                 ));
             }
             role = UserRoleEnum.ADMIN;
-        }
+        }*/
 
         // 사용자 등록
-        Users user = new Users(username, password, passwordDecoded, password2, password3, email, point, role);
+        Users user = new Users(username, password, passwordDecoded, password2, password3, email, role);
         userRepository.save(user);
     }
 

@@ -23,10 +23,9 @@ public class AuthRequestDto {
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "이메일 형식으로 구성되어야 합니다.")
     private String email;
 
-    private int point;
 //    private UserRoleEnum role; // 회원 권한 (ADMIN,OWNER, USER)
     private boolean owner;
-    private boolean admin;
+  //  private boolean admin;
     private String ownerToken = "";
-    private String adminToken = "";
+ //   private String adminToken = "";
 }
