@@ -3,6 +3,6 @@ package com.dia.delivery.user.dto;
 import lombok.Getter;
 
 @Getter
-public class DeleteRequestDto {
+public class PasswordRequestDto {
     private String password;
 }

@@ -39,19 +39,21 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String email;
 
-  
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
     @OneToMany(mappedBy = "users")
     private List<Stores> storesList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<Reviews> reviewsList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
-    private List<Orders> ordersList = new ArrayList<>();
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Orders> ownerOrders = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Orders> userOrders = new ArrayList<>();
+
 
 
     public Users(String username, String password, String passwordDecoded, String password2, String password3, String email, UserRoleEnum role) {

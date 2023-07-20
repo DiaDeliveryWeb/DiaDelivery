@@ -1,11 +1,11 @@
 package com.dia.delivery.user.controller;
 
 import com.dia.delivery.common.jwt.JwtUtil;
-import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.*;
 import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.security.UserDetailsImpl;
 import com.dia.delivery.user.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,13 @@ public class UserController {
                     ));
         }
         userService.signup(requestDto);
+        return ResponseEntity.ok(new ApiResponseDto("회원가입 완료", 200));
+    }
 
+    @ResponseBody
+    @PostMapping("/email-auth")
+    public String sendMail(@RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
+        return  userService.sendMail(requestDto.getEmail());
     }
 
     /*@PostMapping("/user/email-auth")
@@ -59,12 +65,7 @@ public class UserController {
     @GetMapping("/user-info")
     @ResponseBody
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String username = userDetails.getUser().getUsername();
-        UserRoleEnum role = userDetails.getUser().getRole();
-    //    boolean isAdmin = (role == UserRoleEnum.ADMIN);
-        boolean isOwner = (role == UserRoleEnum.OWNER);
-        return new UserInfoDto(username, isOwner);
-       // return new UserInfoDto(username, isAdmin, isOwner);
+        return new UserInfoDto(userDetails.getUser());
     }
 
     //회원정보 변경
@@ -83,7 +84,7 @@ public class UserController {
 
     // 회원탈퇴
     @DeleteMapping("/withdrawal")
-    public void delete(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public void delete(@RequestBody PasswordRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         userService.delete(requestDto, userDetails.getUser());
 
     }

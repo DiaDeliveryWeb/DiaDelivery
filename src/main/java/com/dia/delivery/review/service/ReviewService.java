@@ -39,7 +39,7 @@ public class ReviewService {
                         "Not Found Order",
                         Locale.getDefault()
                 )));
-        if (!orders.getUsers().getId().equals(user.getId())) throw new IllegalArgumentException(
+        if (!orders.getUser().getId().equals(user.getId())) throw new IllegalArgumentException(
                         messageSource.getMessage(
                         "not.order.account",
                         null,
@@ -68,7 +68,7 @@ public class ReviewService {
                         "Not Found Order",
                         Locale.getDefault()
                 )));
-        if (!orders.getUsers().getId().equals(user.getId()))  throw new IllegalArgumentException(
+        if (!orders.getUser().getId().equals(user.getId()))  throw new IllegalArgumentException(
                         messageSource.getMessage(
                         "not.order.account",
                         null,
@@ -88,7 +88,7 @@ public class ReviewService {
                         "Not Found Order",
                         Locale.getDefault()
                 )));
-        if (!orders.getUsers().getId().equals(user.getId()))  throw new IllegalArgumentException(
+        if (!orders.getUser().getId().equals(user.getId()))  throw new IllegalArgumentException(
                         messageSource.getMessage(
                         "not.order.account",
                         null,

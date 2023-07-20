@@ -26,6 +26,6 @@ public class AuthRequestDto {
 //    private UserRoleEnum role; // 회원 권한 (ADMIN,OWNER, USER)
     private boolean owner;
   //  private boolean admin;
-    private String ownerToken = "";
+    private String ownerToken;
  //   private String adminToken = "";
 }

@@ -4,12 +4,16 @@ package com.dia.delivery.user.service;
 import com.dia.delivery.common.jwt.JwtUtil;
 import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.AuthRequestDto;
-import com.dia.delivery.user.dto.DeleteRequestDto;
+import com.dia.delivery.user.dto.PasswordRequestDto;
 import com.dia.delivery.user.dto.UpdateRequestDto;
 import com.dia.delivery.user.entity.Users;
 import com.dia.delivery.user.repository.UserRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
@@ -26,7 +31,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
-
+    private final JavaMailSender javaMailSender;
     // ADMIN_TOKEN
     private final String OWNER_TOKEN = "1111";
  //   private final String ADMIN_TOKEN = "2222";
@@ -98,26 +103,6 @@ public class UserService {
     }
 
 
-
-//    public void login(LoginRequestDto requestDto) {
-//        String username = requestDto.getUsername();
-//        String password = requestDto.getPassword();
-//
-//        //사용자 확인 (username 이 없는 경우)
-//        Users user = userRepository.findByUsername(username).orElseThrow(
-//                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-//        );
-//
-//        //비밀번호 확인 (password 가 다른 경우)
-//        if(!passwordEncoder.matches(password, user.getPassword())) {
-//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
-//    }
-
-//    public void delete(Long id) {
-//        userRepository.deleteById(id);
-//    }
-
     @Transactional
     //사용자 정보 변경
     public void changeUserPassword(Long id, UpdateRequestDto requestDto) {
@@ -148,11 +133,42 @@ public class UserService {
         user.setPasswordDecoded(newPW);
     }
 
-    public void delete(DeleteRequestDto requestDto, Users user) {
+    public void delete(PasswordRequestDto requestDto, Users user) {
         if(!requestDto.getPassword().equals(user.getPasswordDecoded())) {
             throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }
         userRepository.delete(user);
+    }
+
+    public String sendMail(String email) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        String authCode = createCode();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        mimeMessageHelper.setTo(email); // 메일 수신자
+        mimeMessageHelper.setSubject("이메일 인증을 위한 인증 코드 발송"); // 메일 제목
+        mimeMessageHelper.setText(authCode); // 인증 코드
+        javaMailSender.send(mimeMessage);
+        return authCode;
+    }
+
+    private String createCode() {    // 이메일 인증번호 생성 메서드
+        Random random = new Random();
+        StringBuffer key = new StringBuffer();
+
+        for (int i = 0; i < 6; i++) {
+            int index = random.nextInt(4);
+            switch (index) {
+                case 0:
+                    key.append((char) ((int) random.nextInt(26) + 97));
+                    break;
+                case 1:
+                    key.append((char) ((int) random.nextInt(26) + 65));
+                    break;
+                default:
+                    key.append(random.nextInt(9));
+            }
+        }
+        return key.toString();
     }
 }
 
