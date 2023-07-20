@@ -30,13 +30,13 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     public ResponseEntity<ApiResponseDto> login(@RequestBody LoginRequestDto requestDto) {
         userService.login(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("로그인 성공", 200));
 
     }
-
+*/
     @PostMapping("/signup")
     public ResponseEntity<ApiResponseDto> signup(@RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리

@@ -52,11 +52,11 @@ public class WebSecurityConfig {
         return new JwtAuthorizationFilter(jwtUtil, userDetailsService, objectMapper);
     }
 
-//     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-//         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
-//         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-//         return filter;
-//     }
+     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+         return filter;
+     }
 
 //     @Bean
 //     public JwtAuthorizationFilter jwtAuthorizationFilter() {
