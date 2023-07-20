@@ -9,11 +9,13 @@ import com.dia.delivery.user.dto.UpdateRequestDto;
 import com.dia.delivery.user.entity.Users;
 import com.dia.delivery.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final MessageSource messageSource;
 
     // ADMIN_TOKEN
     private final String OWNER_TOKEN = "1111";
@@ -40,25 +43,51 @@ public class UserService {
 
         // 회원 중복 확인
          if(userRepository.findByUsername(username).isPresent()){
-             throw new IllegalArgumentException("이미 존재하는 회원 이름입니다.");}
+             throw new IllegalArgumentException(
+                     messageSource.getMessage(
+                             "already.in.username",
+                             null,
+                             "Already have UserName",
+                             Locale.getDefault()
+                     )
+
+             );}
 
         // 사용자 이메일 중복 확인
          if(userRepository.findByEmail(email).isPresent()){
-             throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+             throw new IllegalArgumentException(
+                     messageSource.getMessage(
+                     "already.in.email",
+                     null,
+                     "Already have Email",
+                     Locale.getDefault()
+             ));
          }
 
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isOwner()) {
             if (!OWNER_TOKEN.equals(requestDto.getOwnerToken())) {
-                throw new IllegalArgumentException("사장님 권한 암호가 틀려 등록이 불가능합니다.");
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "not.correct.ownertoken",
+                                null,
+                                "Uncorrect OwnerToken",
+                                Locale.getDefault()
+                ));
             }
             role = UserRoleEnum.OWNER;
         }
 
         if (requestDto.isAdmin()) {
             if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new IllegalArgumentException("관리자 권한 암호가 틀려 등록이 불가능합니다.");
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                        "not.correct.admintoken",
+                        null,
+                        "Uncorrect AdminToken",
+                        Locale.getDefault()
+                ));
             }
             role = UserRoleEnum.ADMIN;
         }

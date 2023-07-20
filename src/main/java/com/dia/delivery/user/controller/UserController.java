@@ -28,7 +28,7 @@ public class UserController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/users/signup")
-    public ResponseEntity<ApiResponseDto> signup(@Valid @RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
+    public void signup(@Valid @RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if(fieldErrors.size() > 0) {
@@ -36,7 +36,6 @@ public class UserController {
         }
         userService.signup(requestDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원가입 성공", HttpStatus.OK.value()));
     }
 
     /*@PostMapping("/user/email-auth")
@@ -73,9 +72,8 @@ public class UserController {
 
     // 회원탈퇴
     @DeleteMapping("/withdrawal")
-    public ResponseEntity<ApiResponseDto> delete(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public void delete(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         userService.delete(requestDto, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원탈퇴 완료", 200));
 
     }
 
