@@ -30,8 +30,9 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
 
-    @PostMapping("/users/signup")
-    public void signup(@Valid @RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
+
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponseDto> signup(@RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if(fieldErrors.size() > 0) {
