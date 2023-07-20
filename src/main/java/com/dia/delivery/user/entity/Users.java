@@ -39,11 +39,6 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String email;
 
-//    @Column
-//    private Integer point;
-
-    @Column(nullable = false)
-    private int point;
   
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -59,14 +54,13 @@ public class Users {
     private List<Orders> ordersList = new ArrayList<>();
 
 
-    public Users(String username, String password, String passwordDecoded, String password2, String password3, String email, int point, UserRoleEnum role) {
+    public Users(String username, String password, String passwordDecoded, String password2, String password3, String email, UserRoleEnum role) {
         this.username=username;
         this.password=password;
         this.passwordDecoded = passwordDecoded;
         this.password2=password2;
         this.password3=password3;
         this.email=email;
-        this.point = point;
         this.role=role;
     }
 }

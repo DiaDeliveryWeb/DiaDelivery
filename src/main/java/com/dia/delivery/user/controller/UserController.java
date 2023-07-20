@@ -9,6 +9,7 @@ import com.dia.delivery.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 //@Controller//-> 앞단 완료되면 바꿀 예정
@@ -26,20 +28,24 @@ public class UserController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
+    private final MessageSource messageSource;
 
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponseDto> signup(@RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
-
-
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if(fieldErrors.size() > 0) {
-            throw new IllegalArgumentException("회원가입 아이디 비밀번호 입력 양식을 맞춰주세요.");
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "not.signup.form",
+                            null,
+                            "Not Signup Form",
+                            Locale.getDefault()
+                    ));
         }
         userService.signup(requestDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원가입 성공", HttpStatus.OK.value()));
     }
 
     /*@PostMapping("/user/email-auth")
@@ -55,9 +61,10 @@ public class UserController {
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUser().getUsername();
         UserRoleEnum role = userDetails.getUser().getRole();
-        boolean isAdmin = (role == UserRoleEnum.ADMIN);
+    //    boolean isAdmin = (role == UserRoleEnum.ADMIN);
         boolean isOwner = (role == UserRoleEnum.OWNER);
-        return new UserInfoDto(username, isAdmin, isOwner);
+        return new UserInfoDto(username, isOwner);
+       // return new UserInfoDto(username, isAdmin, isOwner);
     }
 
     //회원정보 변경
@@ -76,12 +83,10 @@ public class UserController {
 
     // 회원탈퇴
     @DeleteMapping("/withdrawal")
-    public ResponseEntity<ApiResponseDto> delete(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public void delete(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         userService.delete(requestDto, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원탈퇴 완료", 200));
 
     }
-
 }
 
 // @Slf4j
