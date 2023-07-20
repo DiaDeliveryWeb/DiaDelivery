@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import static com.dia.delivery.order.OrderStatus.주문생성;
 
 @Entity
@@ -30,6 +29,7 @@ public class Orders extends Timestamped {
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Users users;

@@ -1,6 +1,8 @@
-
 package com.dia.delivery.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import com.dia.delivery.common.jwt.JwtUtil;
 import com.dia.delivery.common.security.JwtAuthenticationFilter;
 import com.dia.delivery.common.security.JwtAuthorizationFilter;
@@ -23,8 +25,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import java.util.List;
+
 
 @Configuration
 @RequiredArgsConstructor
@@ -34,27 +36,32 @@ public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
+    private final ObjectMapper objectMapper;
     private final AuthenticationConfiguration authenticationConfiguration;
+  
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();}
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
-        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-        return filter;
+    public JwtAuthorizationFilter jwtAuthorizationFilter() {
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService, objectMapper);
     }
 
-    @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
-    }
+//     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+//         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+//         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+//         return filter;
+//     }
+
+//     @Bean
+//     public JwtAuthorizationFilter jwtAuthorizationFilter() {
+//         return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+//     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -69,7 +76,6 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-
                                 .anyRequest().permitAll()
         );
         // 필터 관리
