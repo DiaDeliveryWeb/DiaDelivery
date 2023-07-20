@@ -46,7 +46,7 @@ public class UserService {
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isOwner()) {
-            if (!OWNER_TOKEN.equals(requestDto.getAdminToken())) {
+            if (!OWNER_TOKEN.equals(requestDto.getOwnerToken())) {
                 throw new IllegalArgumentException("사장님 권한 암호가 틀려 등록이 불가능합니다.");
             }
             role = UserRoleEnum.OWNER;
