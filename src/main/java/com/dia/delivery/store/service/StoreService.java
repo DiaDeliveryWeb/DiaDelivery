@@ -29,7 +29,7 @@ public class StoreService {
         if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
             throw new IllegalArgumentException(
                              messageSource.getMessage(
-                            "not.enroll.role",
+                            "not.create.role",
                             null,
                             "Not Enroll Store",
                             Locale.getDefault()
@@ -91,7 +91,7 @@ public class StoreService {
         if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
             throw new IllegalArgumentException(
                             messageSource.getMessage(
-                            "not.enroll.role",
+                            "not.delete.role",
                             null,
                             "Not Enroll Store",
                             Locale.getDefault()
@@ -128,7 +128,7 @@ public class StoreService {
         if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
             throw new IllegalArgumentException(
                     messageSource.getMessage(
-                            "not.update.role",
+                            "not.read.role",
                             null,
                             "Not Update Store",
                             Locale.getDefault()
