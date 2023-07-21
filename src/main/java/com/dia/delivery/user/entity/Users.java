@@ -39,12 +39,6 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String email;
 
-//    @Column
-//    private Integer point;
-
-    @Column(nullable = false)
-    private int point;
-  
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -57,22 +51,24 @@ public class Users {
 
     @OneToMany(mappedBy = "users")
     private List<Stores> storesList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<Reviews> reviewsList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
-    private List<Orders> ordersList = new ArrayList<>();
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Orders> ownerOrders = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Orders> userOrders = new ArrayList<>();
 
 
-    public Users(String username, String password, String passwordDecoded, String password2, String password3, String email, int point, UserRoleEnum role) {
+
+    public Users(String username, String password, String passwordDecoded, String password2, String password3, String email, UserRoleEnum role) {
         this.username=username;
         this.password=password;
         this.passwordDecoded = passwordDecoded;
         this.password2=password2;
         this.password3=password3;
         this.email=email;
-        this.point = point;
         this.role=role;
     }
 }

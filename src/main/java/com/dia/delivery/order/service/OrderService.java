@@ -9,12 +9,16 @@ import com.dia.delivery.product.entity.Products;
 import com.dia.delivery.product.repository.ProductRepository;
 import com.dia.delivery.productorder.entity.ProductOrders;
 import com.dia.delivery.productorder.repository.ProductOrderRepository;
+import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.entity.Users;
+import jdk.swing.interop.SwingInterOpUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +27,14 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final ProductOrderRepository productOrderRepository;
+    private final MessageSource messageSource;
 
     public OrderResponseDto save(Users user, OrderRequestDto requestDto) {
+        if(!user.getRole().equals(UserRoleEnum.USER)){
+            throw new IllegalArgumentException("고객만 주문이 가능합니다.");
+        }
         List<Products> products = productRepository.findAllByIdIn(requestDto.getProductList());
-        Orders orders = new Orders(user);
+        Orders orders = new Orders(user, products.get(0).getStores().getUsers());
         for (Products product : products) {
             productOrderRepository.save(new ProductOrders(orders, product));
         }
@@ -34,7 +42,14 @@ public class OrderService {
     }
 
     public void accept(Users user, String orderNum) {
-        Orders orders = orderRepository.findByOrderNum(orderNum).orElseThrow(()->new IllegalArgumentException("해당 주문내역이 없습니다"));
+        Orders orders = orderRepository.findByOrderNum(orderNum).orElseThrow(()->new IllegalArgumentException(
+                messageSource.getMessage(
+                        "not.correct.admintoken",
+                        null,
+                        "Uncorrect AdminToken",
+                        Locale.getDefault()
+                )
+        ));
         orders.setOrderStatus(OrderStatus.주문완료);
     }
 
@@ -44,6 +59,9 @@ public class OrderService {
     }
 
     public List<OrderResponseDto> findAll(Users user) {
-        return orderRepository.findAllByUsers(user).stream().map(OrderResponseDto::new).toList();
+        if(user.getRole().equals(UserRoleEnum.USER)) {
+            return orderRepository.findAllByUser(user).stream().map(OrderResponseDto::new).toList();
+        }
+        return orderRepository.findAllByOwner(user).stream().map(OrderResponseDto::new).toList();
     }
 }

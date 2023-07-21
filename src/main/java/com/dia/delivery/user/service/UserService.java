@@ -8,12 +8,22 @@ import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.AuthRequestDto;
 import com.dia.delivery.user.dto.DeleteRequestDto;
 import com.dia.delivery.user.dto.ProfileResponseDto;
+
+import com.dia.delivery.user.dto.PasswordRequestDto;
+import com.dia.delivery.user.dto.UpdateRequestDto;
 import com.dia.delivery.user.entity.Users;
 import com.dia.delivery.user.repository.UserRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
+import org.springframework.context.MessageSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -22,8 +32,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
 import java.util.regex.Pattern;
+
+import java.util.Random;
+
 
 @RequiredArgsConstructor
 @Service
@@ -33,10 +48,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ImageUploader imageUploader;
     private final JwtUtil jwtUtil;
-
+    private final MessageSource messageSource;
+    private final JavaMailSender javaMailSender;
     // ADMIN_TOKEN
     private final String OWNER_TOKEN = "1111";
-    private final String ADMIN_TOKEN = "2222";
+ //   private final String ADMIN_TOKEN = "2222";
 
 
     public void signup(AuthRequestDto requestDto) {
@@ -46,35 +62,61 @@ public class UserService {
         String password2 = null;
         String password3 = null;
         String email = requestDto.getEmail();
-        int point = requestDto.getPoint();
+    //    int point = requestDto.getPoint();
 
         // 회원 중복 확인
          if(userRepository.findByUsername(username).isPresent()){
-             throw new IllegalArgumentException("이미 존재하는 회원 이름입니다.");}
+             throw new IllegalArgumentException(
+                     messageSource.getMessage(
+                             "already.in.username",
+                             null,
+                             "Already have UserName",
+                             Locale.getDefault()
+                     )
+
+             );}
 
         // 사용자 이메일 중복 확인
          if(userRepository.findByEmail(email).isPresent()){
-             throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+             throw new IllegalArgumentException(
+                     messageSource.getMessage(
+                     "already.in.email",
+                     null,
+                     "Already have Email",
+                     Locale.getDefault()
+             ));
          }
 
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (requestDto.isOwner()) {
             if (!OWNER_TOKEN.equals(requestDto.getOwnerToken())) {
-                throw new IllegalArgumentException("사장님 권한 암호가 틀려 등록이 불가능합니다.");
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                                "not.correct.ownertoken",
+                                null,
+                                "Uncorrect OwnerToken",
+                                Locale.getDefault()
+                ));
             }
             role = UserRoleEnum.OWNER;
         }
 
-        if (requestDto.isAdmin()) {
+     /*   if (requestDto.isAdmin()) {
             if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new IllegalArgumentException("관리자 권한 암호가 틀려 등록이 불가능합니다.");
+                throw new IllegalArgumentException(
+                        messageSource.getMessage(
+                        "not.correct.admintoken",
+                        null,
+                        "Uncorrect AdminToken",
+                        Locale.getDefault()
+                ));
             }
             role = UserRoleEnum.ADMIN;
-        }
+        }*/
 
         // 사용자 등록
-        Users user = new Users(username, password, passwordDecoded, password2, password3, email, point, role);
+        Users user = new Users(username, password, passwordDecoded, password2, password3, email, role);
         userRepository.save(user);
     }
 
@@ -114,26 +156,13 @@ public class UserService {
         return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public ResponseEntity<ApiResponseDto> changeUserInfoPic(MultipartFile profilePic, Users user) throws IOException {
-        if (profilePic != null) {
-            Users dbUser = userRepository.findByUsername(user.getUsername()).orElseThrow(()->
-                    new IllegalArgumentException(""));
-            String imageUrl = imageUploader.upload(profilePic, "image");
-            dbUser.setImageUrl(imageUrl);
-            ApiResponseDto apiResponseDto = new ApiResponseDto("프로필이 변경되었습니다.", HttpStatus.OK.value());
-            return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
-        }
-        ApiResponseDto apiResponseDto = new ApiResponseDto("프로필 사진 제외 변경되었습니다.", HttpStatus.OK.value());
-        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
-    }
-
-    public void delete(DeleteRequestDto requestDto, Users user) {
+    public void delete(PasswordRequestDto requestDto, Users user) {
         if(!requestDto.getPassword().equals(user.getPasswordDecoded())) {
             throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }
         userRepository.delete(user);
     }
+
     public boolean isValidString(String input) {
         if (input.length() < 8 || input.length() > 15) {
             return false;
@@ -147,6 +176,37 @@ public class UserService {
                 new IllegalArgumentException(""));
         ProfileResponseDto profileResponseDto = new ProfileResponseDto(dbUser.getImageUrl(), dbUser.getIntroduction());
         return new ResponseEntity<>(profileResponseDto, HttpStatus.OK);
+
+
+    public String sendMail(String email) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        String authCode = createCode();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        mimeMessageHelper.setTo(email); // 메일 수신자
+        mimeMessageHelper.setSubject("이메일 인증을 위한 인증 코드 발송"); // 메일 제목
+        mimeMessageHelper.setText(authCode); // 인증 코드
+        javaMailSender.send(mimeMessage);
+        return authCode;
+    }
+
+    private String createCode() {    // 이메일 인증번호 생성 메서드
+        Random random = new Random();
+        StringBuffer key = new StringBuffer();
+
+        for (int i = 0; i < 6; i++) {
+            int index = random.nextInt(4);
+            switch (index) {
+                case 0:
+                    key.append((char) ((int) random.nextInt(26) + 97));
+                    break;
+                case 1:
+                    key.append((char) ((int) random.nextInt(26) + 65));
+                    break;
+                default:
+                    key.append(random.nextInt(9));
+            }
+        }
+        return key.toString();
     }
 }
 

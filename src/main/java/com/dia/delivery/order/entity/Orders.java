@@ -32,16 +32,22 @@ public class Orders extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Users users;
+    private Users user;
 
-    @OneToMany(mappedBy = "orders")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Users owner;
+
+
+    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOrders> productOrdersList = new ArrayList<>();
 
     @OneToOne(mappedBy = "orders", orphanRemoval = true)
     private Reviews reviews;
 
-    public Orders(Users users){
-        this.users = users;
+    public Orders(Users user, Users owner){
+        this.user = user;
+        this.owner = owner;
         this.orderStatus = 주문생성;
         this.orderNum = UUID.randomUUID().toString();
     }
