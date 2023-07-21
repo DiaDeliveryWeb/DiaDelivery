@@ -5,6 +5,7 @@ import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.*;
 import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.security.UserDetailsImpl;
+import com.dia.delivery.user.service.RegisterEmail;
 import com.dia.delivery.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
-
+    private final RegisterEmail registerMail;
     @PostMapping("/users/signup")
     public void signup(@Valid @RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
@@ -85,6 +86,15 @@ public class UserController {
     public void delete(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         userService.delete(requestDto, userDetails.getUser());
 
+    }
+
+    @PostMapping("login/mailConfirm")
+    @ResponseBody
+    String mailConfirm(@RequestParam("email") String email) throws Exception {
+
+        String code = registerMail.sendSimpleMessage(email);
+        System.out.println("인증코드 : " + code);
+        return code;
     }
 }
 
