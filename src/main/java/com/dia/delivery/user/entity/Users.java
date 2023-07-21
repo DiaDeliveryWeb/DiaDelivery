@@ -49,6 +49,12 @@ public class Users {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @Column
+    private String imageUrl;
+
+    @Column
+    private String introduction;
+
     @OneToMany(mappedBy = "users")
     private List<Stores> storesList = new ArrayList<>();
     @OneToMany(mappedBy = "users")
