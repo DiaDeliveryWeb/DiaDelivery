@@ -88,6 +88,8 @@ public class UserController {
 
     }
 
+    //메일 인증번호 받기
+
     @PostMapping("login/mailConfirm")
     @ResponseBody
     String mailConfirm(@RequestParam("email") String email) throws Exception {

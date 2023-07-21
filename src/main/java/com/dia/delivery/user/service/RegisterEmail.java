@@ -20,7 +20,6 @@ public class RegisterEmail implements EmailService {
 
     private String ePw;
 
-    // 메일 내용 작성
     @Override
     public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
 
@@ -77,7 +76,7 @@ public class RegisterEmail implements EmailService {
     @Override
     public String sendSimpleMessage(String to) throws Exception {
 
-        ePw = createKey(); // 랜덤 인증번호 생성
+        ePw = createKey();
 
         // TODO Auto-generated method stub
         MimeMessage message = createMessage(to);
