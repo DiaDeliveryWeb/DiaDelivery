@@ -32,6 +32,31 @@ public class ProductService {
     private final MessageSource messageSource;
     private final ImageUploader imageUploader;
 
+    @Transactional(readOnly = true)
+    public List<ProductResponseDto> getProducts(String name, Users user) {
+        Stores store= storeRepository.findByName(name);
+        if (store == null) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "not.found.store",
+                            null,
+                            "Not Found Store",
+                            Locale.getDefault()
+                    ));
+        }
+
+        if(user.getRole().getAuthority().equals("ROLE_USER")){
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "not.have.ownerrole",
+                            null,
+                            "Not Have Role",
+                            Locale.getDefault()
+                    ));
+        }
+
+        return store.getProductsList().stream().map(ProductResponseDto::new).toList();
+    }
     @Transactional
     public List<ProductResponseDto> addProducts(Long storeId, ProductRequestListDto requestDto, Users user,List<MultipartFile> image) throws IOException {
         Stores store=storeRepository.findById(storeId).orElseThrow(()-> new IllegalArgumentException("음식점이 존재하지 않습니다."));
