@@ -50,11 +50,11 @@ public class Users {
     @Column
     private String introduction;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Stores> storesList = new ArrayList<>();
-    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Reviews> reviewsList = new ArrayList<>();
-    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
     @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Orders> ownerOrders = new ArrayList<>();
