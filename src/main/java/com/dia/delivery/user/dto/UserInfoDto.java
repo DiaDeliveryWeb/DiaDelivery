@@ -6,10 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public class UserInfoDto {
     private String username;
-  //  boolean isAdmin;
+    //  boolean isAdmin;
     private boolean isOwner;
     private int scrapNum;
     private int reviewNum;

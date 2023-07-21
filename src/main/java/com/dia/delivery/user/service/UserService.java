@@ -8,25 +8,18 @@ import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.AuthRequestDto;
 import com.dia.delivery.user.dto.DeleteRequestDto;
 import com.dia.delivery.user.dto.ProfileResponseDto;
-
-import com.dia.delivery.user.dto.PasswordRequestDto;
-import com.dia.delivery.user.dto.UpdateRequestDto;
 import com.dia.delivery.user.entity.Users;
 import com.dia.delivery.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
-import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,10 +27,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import java.util.regex.Pattern;
-
 import java.util.Random;
+import java.util.regex.Pattern;
 
 
 @RequiredArgsConstructor
@@ -50,6 +41,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
     private final JavaMailSender javaMailSender;
+
     // ADMIN_TOKEN
     private final String OWNER_TOKEN = "1111";
  //   private final String ADMIN_TOKEN = "2222";
@@ -102,27 +94,35 @@ public class UserService {
             role = UserRoleEnum.OWNER;
         }
 
-     /*   if (requestDto.isAdmin()) {
-            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
-                throw new IllegalArgumentException(
-                        messageSource.getMessage(
-                        "not.correct.admintoken",
-                        null,
-                        "Uncorrect AdminToken",
-                        Locale.getDefault()
-                ));
-            }
-            role = UserRoleEnum.ADMIN;
-        }*/
 
         // 사용자 등록
         Users user = new Users(username, password, passwordDecoded, password2, password3, email, role);
         userRepository.save(user);
     }
 
+
+//    public void login(LoginRequestDto requestDto) {
+//        String username = requestDto.getUsername();
+//        String password = requestDto.getPassword();
+//
+//        //사용자 확인 (username 이 없는 경우)
+//        Users user = userRepository.findByUsername(username).orElseThrow(
+//                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+//        );
+//
+//        //비밀번호 확인 (password 가 다른 경우)
+//        if(!passwordEncoder.matches(password, user.getPassword())) {
+//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+//        }
+//    }
+
+//    public void delete(Long id) {
+//        userRepository.deleteById(id);
+//    }
+
     @Transactional
     public ResponseEntity<ApiResponseDto> changeUserInfo(MultipartFile profilePic, String introduction, String password, Users user) throws IOException {
-        Users dbUser = userRepository.findByUsername(user.getUsername()).orElseThrow(()->
+        Users dbUser = userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
                 new IllegalArgumentException(""));
         if (profilePic != null) {
             String imageUrl = imageUploader.upload(profilePic, "image");
@@ -156,8 +156,8 @@ public class UserService {
         return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
     }
 
-    public void delete(PasswordRequestDto requestDto, Users user) {
-        if(!requestDto.getPassword().equals(user.getPasswordDecoded())) {
+    public void delete(DeleteRequestDto requestDto, Users user) {
+        if (!requestDto.getPassword().equals(user.getPasswordDecoded())) {
             throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }
         userRepository.delete(user);
@@ -172,11 +172,11 @@ public class UserService {
     }
 
     public ResponseEntity<ProfileResponseDto> getProfile(Users user) {
-        Users dbUser = userRepository.findByUsername(user.getUsername()).orElseThrow(()->
+        Users dbUser = userRepository.findByUsername(user.getUsername()).orElseThrow(() ->
                 new IllegalArgumentException(""));
         ProfileResponseDto profileResponseDto = new ProfileResponseDto(dbUser.getImageUrl(), dbUser.getIntroduction());
         return new ResponseEntity<>(profileResponseDto, HttpStatus.OK);
-
+    }
 
     public String sendMail(String email) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

@@ -32,14 +32,13 @@ public class Orders extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Users user;
+    private Users owner;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Users owner;
+    private Users user;
 
-
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "orders")
     private List<ProductOrders> productOrdersList = new ArrayList<>();
 
     @OneToOne(mappedBy = "orders", orphanRemoval = true)

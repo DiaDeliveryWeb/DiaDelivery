@@ -1,6 +1,7 @@
 package com.dia.delivery.user.controller;
 
 import com.dia.delivery.common.jwt.JwtUtil;
+import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.*;
 import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.security.UserDetailsImpl;
@@ -38,7 +39,7 @@ public class UserController {
     public ResponseEntity<ApiResponseDto> signup(@RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if(fieldErrors.size() > 0) {
+        if (fieldErrors.size() > 0) {
             throw new IllegalArgumentException(
                     messageSource.getMessage(
                             "not.signup.form",
@@ -48,20 +49,14 @@ public class UserController {
                     ));
         }
         userService.signup(requestDto);
-        return ResponseEntity.ok(new ApiResponseDto("회원가입 완료", 200));
+        return ResponseEntity.ok(new ApiResponseDto("회원가입 완료",200));
     }
 
-    @ResponseBody
+
     @PostMapping("/email-auth")
     public String sendMail(@RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
         return  userService.sendMail(requestDto.getEmail());
     }
-
-    /*@PostMapping("/user/email-auth")
-    public ResponseEntity<ApiResponseDto> sendMail(@RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
-         userService.sendMail(requestDto.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("이메일보내기 성공", 200));
-    }*/
 
 
     // 회원 관련 정보 받기
@@ -85,6 +80,7 @@ public class UserController {
     }
 
     // 회원탈퇴
+
     @DeleteMapping("/users/withdrawal")
     public ResponseEntity<ApiResponseDto> delete(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         userService.delete(requestDto, userDetails.getUser());

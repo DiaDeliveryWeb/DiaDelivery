@@ -39,6 +39,7 @@ public class Users {
     @Column(nullable = false, unique = true)
     private String email;
 
+  
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -59,7 +60,6 @@ public class Users {
     private List<Orders> ownerOrders = new ArrayList<>();
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Orders> userOrders = new ArrayList<>();
-
 
 
     public Users(String username, String password, String passwordDecoded, String password2, String password3, String email, UserRoleEnum role) {

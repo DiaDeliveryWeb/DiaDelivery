@@ -1,14 +1,10 @@
 package com.dia.delivery.product.entity;
 
 import com.dia.delivery.product.dto.ProductRequestDto;
-import com.dia.delivery.productorder.entity.ProductOrders;
 import com.dia.delivery.store.entity.Stores;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -31,8 +27,6 @@ public class Products {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "products")
-    private List<ProductOrders> productOrders = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
