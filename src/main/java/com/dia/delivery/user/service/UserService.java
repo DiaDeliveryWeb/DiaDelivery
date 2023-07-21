@@ -1,9 +1,14 @@
 package com.dia.delivery.user.service;
 
 
+import com.dia.delivery.common.dto.ApiResponseDto;
+import com.dia.delivery.common.image.ImageUploader;
 import com.dia.delivery.common.jwt.JwtUtil;
 import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.AuthRequestDto;
+import com.dia.delivery.user.dto.DeleteRequestDto;
+import com.dia.delivery.user.dto.ProfileResponseDto;
+
 import com.dia.delivery.user.dto.PasswordRequestDto;
 import com.dia.delivery.user.dto.UpdateRequestDto;
 import com.dia.delivery.user.entity.Users;
@@ -11,17 +16,29 @@ import com.dia.delivery.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import java.util.regex.Pattern;
+
 import java.util.Random;
+
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +46,7 @@ import java.util.Random;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ImageUploader imageUploader;
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
     private final JavaMailSender javaMailSender;
@@ -102,16 +120,18 @@ public class UserService {
         userRepository.save(user);
     }
 
-
     @Transactional
-    //사용자 정보 변경
-    public void changeUserPassword(Long id, UpdateRequestDto requestDto) {
+    public ResponseEntity<ApiResponseDto> changeUserInfo(MultipartFile profilePic, String introduction, String password, Users user) throws IOException {
+        Users dbUser = userRepository.findByUsername(user.getUsername()).orElseThrow(()->
+                new IllegalArgumentException(""));
+        if (profilePic != null) {
+            String imageUrl = imageUploader.upload(profilePic, "image");
+            dbUser.setImageUrl(imageUrl);
+        }
 
-        String newPW = requestDto.getPassword();
-        Users user = userRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-        );
+        dbUser.setIntroduction(introduction);
 
+        String newPW = password;
         Map<String, String> map = new HashMap<String, String>();
         map.put("pw", user.getPassword());
         map.put("pw2", user.getPassword2());
@@ -127,10 +147,13 @@ public class UserService {
             }
         }
 
-        user.setPassword3(map.get("pw2"));
-        user.setPassword2(map.get("pw"));
-        user.setPassword(passwordEncoder.encode(newPW));
-        user.setPasswordDecoded(newPW);
+        dbUser.setPassword3(map.get("pw2"));
+        dbUser.setPassword2(map.get("pw"));
+        dbUser.setPassword(passwordEncoder.encode(newPW));
+        dbUser.setPasswordDecoded(newPW);
+
+        ApiResponseDto apiResponseDto = new ApiResponseDto("프로필이 변경되었습니다.", HttpStatus.OK.value());
+        return new ResponseEntity<>(apiResponseDto, HttpStatus.OK);
     }
 
     public void delete(PasswordRequestDto requestDto, Users user) {
@@ -139,6 +162,21 @@ public class UserService {
         }
         userRepository.delete(user);
     }
+
+    public boolean isValidString(String input) {
+        if (input.length() < 8 || input.length() > 15) {
+            return false;
+        }
+        String regex = "^[a-zA-Z0-9!@#$%^&*()-_=+\\[\\]{}|;:',.<>/?]*$";
+        return Pattern.matches(regex, input);
+    }
+
+    public ResponseEntity<ProfileResponseDto> getProfile(Users user) {
+        Users dbUser = userRepository.findByUsername(user.getUsername()).orElseThrow(()->
+                new IllegalArgumentException(""));
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto(dbUser.getImageUrl(), dbUser.getIntroduction());
+        return new ResponseEntity<>(profileResponseDto, HttpStatus.OK);
+
 
     public String sendMail(String email) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

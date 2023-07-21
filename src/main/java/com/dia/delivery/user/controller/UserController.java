@@ -11,17 +11,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 @Slf4j
-//@Controller//-> 앞단 완료되면 바꿀 예정
 @RestController
 @RequiredArgsConstructor
 public class UserController {
@@ -68,42 +71,30 @@ public class UserController {
         return new UserInfoDto(userDetails.getUser());
     }
 
-    //회원정보 변경
-
-    @PutMapping("/inform/{id}")
-    public ResponseEntity<ApiResponseDto> changeUserPassword(@PathVariable Long id, @Valid @RequestBody UpdateRequestDto requestDto, BindingResult bindingResult){
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if(fieldErrors.size() > 0) {
-            throw new IllegalArgumentException("비밀번호 입력 양식을 맞춰주세요.");
+    // 프로필 수정
+    @PutMapping(value = "/users/update", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ApiResponseDto> changeUserInfo(@RequestPart("profilePic") MultipartFile profilePic,
+                                                         @RequestPart("introduction") String introduction,
+                                                         @RequestPart("password") String password, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        if (!userService.isValidString(password)) {
+            throw new IllegalArgumentException("비밀번호 양식을 확인해주세요.");
         }
-        //비밀번호는 사용자에게 노출되면 안되니까 body로 받는다.
-        userService.changeUserPassword(id,requestDto);
+        userService.changeUserInfo(profilePic, introduction, password, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto("회원수정 완료", HttpStatus.CREATED.value()));
 
     }
 
     // 회원탈퇴
-    @DeleteMapping("/withdrawal")
-    public void delete(@RequestBody PasswordRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @DeleteMapping("/users/withdrawal")
+    public ResponseEntity<ApiResponseDto> delete(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         userService.delete(requestDto, userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원탈퇴 완료", 200));
+    }
 
+    @GetMapping("/users/info")
+    public ResponseEntity<ProfileResponseDto> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getProfile(userDetails.getUser());
     }
 }
 
-// @Slf4j
-// @RestController
-// @RequiredArgsConstructor
-// public class UserController {
-//     private final UserService userService;
-//     @PostMapping("/users/signup")
-//     public ResponseEntity<ApiResponseDto> signUp(@RequestBody SignUpRequestDto requestDto){
-//         userService.signup(requestDto);
-//         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원가입 성공", 200));
-//     }
-
-//     @GetMapping("/users/user-info")
-//     public UserResponseDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
-//         return new UserResponseDto(userDetails.getUser());
-//     }
-// }
 
