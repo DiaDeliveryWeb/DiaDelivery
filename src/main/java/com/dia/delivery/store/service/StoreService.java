@@ -122,4 +122,18 @@ public class StoreService {
         }
         return store;
     }
+
+    // 나의 가게 조회
+    public List<StoreResponseDto> getMyStores(Users user) {
+        if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage(
+                            "not.update.role",
+                            null,
+                            "Not Update Store",
+                            Locale.getDefault()
+                    ));
+        }
+        return storeRepository.findByUsersId(user.getId()).stream().map(StoreResponseDto::new).toList();
+    }
 }
