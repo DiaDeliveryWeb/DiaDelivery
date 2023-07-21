@@ -88,7 +88,7 @@ public class UserController {
 
     }
 
-    //메일 인증번호 받기
+    //메일 인증번호 받기 테스트 완료
 
     @PostMapping("login/mailConfirm")
     @ResponseBody
