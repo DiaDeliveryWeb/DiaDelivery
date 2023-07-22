@@ -37,6 +37,13 @@ public class StoreController {
         return storeService.getStores();
     }
 
+
+    // 사용자별 가게 전체 조회
+    @GetMapping("/mystores")
+    public List<StoreResponseDto> getMyStores(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return storeService.getMyStores(userDetails.getUser());
+    }
+
     // 가게 상세 조회
     @GetMapping("/store")
     public ResponseEntity<StoreOneResponseDto> getStore(@RequestParam String name) {

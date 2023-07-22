@@ -32,7 +32,11 @@ public class Orders extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private Users users;
+    private Users owner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Users user;
 
     @OneToMany(mappedBy = "orders")
     private List<ProductOrders> productOrdersList = new ArrayList<>();
@@ -40,8 +44,9 @@ public class Orders extends Timestamped {
     @OneToOne(mappedBy = "orders", orphanRemoval = true)
     private Reviews reviews;
 
-    public Orders(Users users){
-        this.users = users;
+    public Orders(Users user, Users owner){
+        this.user = user;
+        this.owner = owner;
         this.orderStatus = 주문생성;
         this.orderNum = UUID.randomUUID().toString();
     }

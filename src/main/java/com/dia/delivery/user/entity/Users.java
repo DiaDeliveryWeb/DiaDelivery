@@ -44,14 +44,22 @@ public class Users {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "users")
+    @Column
+    private String imageUrl;
+
+    @Column
+    private String introduction;
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Stores> storesList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Reviews> reviewsList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
-    @OneToMany(mappedBy = "users")
-    private List<Orders> ordersList = new ArrayList<>();
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Orders> ownerOrders = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Orders> userOrders = new ArrayList<>();
 
 
     public Users(String username, String password, String passwordDecoded, String password2, String password3, String email, UserRoleEnum role) {

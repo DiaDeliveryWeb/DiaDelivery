@@ -14,6 +14,7 @@ public class OrderResponseDto {
     private List<ProductResponseDto> productResponseDtos;
     private String username;
     private OrderStatus orderStatus;
+    private String orderNum;
 
     public OrderResponseDto(String storeName, List<Products> products, String username, OrderStatus orderStatus) {
         this.storeName = storeName;
@@ -24,8 +25,9 @@ public class OrderResponseDto {
 
     public OrderResponseDto(Orders orders){
         this.storeName = orders.getProductOrdersList().get(0).getProducts().getStores().getName();
-        this.username = orders.getUsers().getUsername();
+        this.username = orders.getUser().getUsername();
         this.orderStatus = orders.getOrderStatus();
+        this.orderNum = orders.getOrderNum();
         this.productResponseDtos = orders.getProductOrdersList().stream().map((productOrders) -> new ProductResponseDto(productOrders.getProducts())).toList();
     }
 }

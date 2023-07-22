@@ -9,6 +9,7 @@ import com.dia.delivery.product.entity.Products;
 import com.dia.delivery.product.repository.ProductRepository;
 import com.dia.delivery.productorder.entity.ProductOrders;
 import com.dia.delivery.productorder.repository.ProductOrderRepository;
+import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.entity.Users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -28,8 +29,11 @@ public class OrderService {
     private final MessageSource messageSource;
 
     public OrderResponseDto save(Users user, OrderRequestDto requestDto) {
+        if(!user.getRole().equals(UserRoleEnum.USER)){
+            throw new IllegalArgumentException("고객만 주문이 가능합니다.");
+        }
         List<Products> products = productRepository.findAllByIdIn(requestDto.getProductList());
-        Orders orders = new Orders(user);
+        Orders orders = new Orders(user, products.get(0).getStores().getUsers());
         for (Products product : products) {
             productOrderRepository.save(new ProductOrders(orders, product));
         }
@@ -54,6 +58,9 @@ public class OrderService {
     }
 
     public List<OrderResponseDto> findAll(Users user) {
-        return orderRepository.findAllByUsers(user).stream().map(OrderResponseDto::new).toList();
+        if(user.getRole().equals(UserRoleEnum.USER)) {
+            return orderRepository.findAllByUser(user).stream().map(OrderResponseDto::new).toList();
+        }
+        return orderRepository.findAllByOwner(user).stream().map(OrderResponseDto::new).toList();
     }
 }

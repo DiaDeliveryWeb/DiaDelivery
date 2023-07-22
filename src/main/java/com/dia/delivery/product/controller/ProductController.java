@@ -2,8 +2,8 @@ package com.dia.delivery.product.controller;
 
 import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.security.UserDetailsImpl;
-import com.dia.delivery.product.dto.ProductRequestListDto;
 import com.dia.delivery.product.dto.ProductRequestDto;
+import com.dia.delivery.product.dto.ProductRequestListDto;
 import com.dia.delivery.product.dto.ProductResponseDto;
 import com.dia.delivery.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,12 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping( "/products")
+    public List<ProductResponseDto> getProducts(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                      @RequestParam String name
+                                                ){
+        return productService.getProducts(name,userDetails.getUser());
+    }
     @PostMapping(value = "/products", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public List<ProductResponseDto> addProducts(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                   @RequestParam Long storeId,
