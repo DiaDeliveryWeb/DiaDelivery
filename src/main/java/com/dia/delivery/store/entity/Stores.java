@@ -31,10 +31,10 @@ public class Stores {
     @Column
     private String category;
 
-    @OneToMany(mappedBy = "stores", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "stores", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Products> productsList = new ArrayList<>();
   
-    @OneToMany(mappedBy = "stores")
+    @OneToMany(mappedBy = "stores", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Reviews> reviewsList = new ArrayList<>();
   
     @OneToMany(mappedBy = "stores")

@@ -17,7 +17,7 @@ public class ProductOrders {
     @ManyToOne(fetch = FetchType.LAZY)
     private Products products;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Orders orders;
 
     public ProductOrders(Orders orders, Products product) {
