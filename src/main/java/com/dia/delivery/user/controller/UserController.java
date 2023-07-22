@@ -7,6 +7,7 @@ import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.security.UserDetailsImpl;
 import com.dia.delivery.user.service.RegisterEmail;
 import com.dia.delivery.user.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
     private final RegisterEmail registerMail;
-    @PostMapping("/users/signup")
+    @PostMapping("/signup")
     public void signup(@Valid @RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -47,13 +48,6 @@ public class UserController {
         userService.signup(requestDto);
 
     }
-
-    /*@PostMapping("/user/email-auth")
-    public ResponseEntity<ApiResponseDto> sendMail(@RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
-         userService.sendMail(requestDto.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("이메일보내기 성공", 200));
-    }*/
-
 
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
@@ -88,32 +82,11 @@ public class UserController {
 
     }
 
-    //메일 인증번호 받기 테스트 완료
 
-    @PostMapping("login/mailConfirm")
-    @ResponseBody
-    String mailConfirm(@RequestParam("email") String email) throws Exception {
-
-        String code = registerMail.sendSimpleMessage(email);
-        System.out.println("인증코드 : " + code);
-        return code;
+    @PostMapping("/login/mailConfirm")
+    public String mailConfirm(@RequestBody EmailAuthRequestDto requestDto) throws Exception {
+        return  registerMail.sendSimpleMessage(requestDto.getEmail());
     }
+
 }
-
-// @Slf4j
-// @RestController
-// @RequiredArgsConstructor
-// public class UserController {
-//     private final UserService userService;
-//     @PostMapping("/users/signup")
-//     public ResponseEntity<ApiResponseDto> signUp(@RequestBody SignUpRequestDto requestDto){
-//         userService.signup(requestDto);
-//         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponseDto("회원가입 성공", 200));
-//     }
-
-//     @GetMapping("/users/user-info")
-//     public UserResponseDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
-//         return new UserResponseDto(userDetails.getUser());
-//     }
-// }
 

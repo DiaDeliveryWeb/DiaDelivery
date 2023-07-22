@@ -74,12 +74,12 @@ public class RegisterEmail implements EmailService {
 
 
     @Override
-    public String sendSimpleMessage(String to) throws Exception {
+    public String sendSimpleMessage(String email) throws Exception {
 
         ePw = createKey();
 
         // TODO Auto-generated method stub
-        MimeMessage message = createMessage(to);
+        MimeMessage message = createMessage(email);
         try {
             emailsender.send(message);
         } catch (MailException es) {
