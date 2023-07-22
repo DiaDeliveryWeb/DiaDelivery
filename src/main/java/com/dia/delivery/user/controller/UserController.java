@@ -61,9 +61,15 @@ public class UserController {
 
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
-    @ResponseBody
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return new UserInfoDto(userDetails.getUser());
+        UserInfoDto userInfoDto = userService.getUserInfo(userDetails.getUser());
+        return userInfoDto;
+    }
+
+    @GetMapping("/profile")
+    public UserProfileDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        UserProfileDto userProfileDto = userService.getUserProfile(userDetails.getUser());
+        return userProfileDto;
     }
 
     // 프로필 수정

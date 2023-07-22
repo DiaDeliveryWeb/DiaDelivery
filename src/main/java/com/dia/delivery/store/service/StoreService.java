@@ -6,6 +6,8 @@ import com.dia.delivery.store.dto.*;
 import com.dia.delivery.store.entity.Stores;
 import com.dia.delivery.store.repository.StoreRepository;
 import com.dia.delivery.user.entity.Users;
+import com.dia.delivery.user.repository.UserRepository;
+import com.dia.delivery.userscrapstore.entity.UserScrapStore;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,6 +27,7 @@ public class StoreService {
     private final StoreRepository storeRepository;
     private final ImageUploader imageUploader;
     private final MessageSource messageSource;
+    private final UserRepository userRepository;
     @Transactional
     public ResponseEntity<StoreCreateResponseDto> createStore(StoreRequestDto requestDto, MultipartFile storeImage, List<MultipartFile> productsImage, Users user) throws IOException {
         if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
@@ -109,6 +113,7 @@ public class StoreService {
         return storeRepository.findByCategory(name).stream().map(StoreResponseDto::new).toList();
     }
 
+    @Transactional(readOnly = true)
     public Stores findStore(String name) {
         Stores store = storeRepository.findByName(name);
         if (store == null) {
@@ -124,6 +129,8 @@ public class StoreService {
     }
 
     // 나의 가게 조회
+    @Transactional(readOnly = true)
+
     public List<StoreResponseDto> getMyStores(Users user) {
         if (!user.getRole().getAuthority().equals("ROLE_ADMIN") && !user.getRole().getAuthority().equals("ROLE_OWNER")) {
             throw new IllegalArgumentException(
@@ -135,5 +142,11 @@ public class StoreService {
                     ));
         }
         return storeRepository.findByUsersId(user.getId()).stream().map(StoreResponseDto::new).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<StoreResponseDto> getScrapStores(Users user) {
+        Users users = userRepository.findById(user.getId()).orElseThrow(()->new IllegalArgumentException("유저 정보가 없습니다."));
+        return users.getUserScrapStoreList().stream().map(userScrapStore -> new StoreResponseDto(userScrapStore.getStores())).toList();
     }
 }

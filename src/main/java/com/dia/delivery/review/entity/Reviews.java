@@ -29,7 +29,7 @@ public class Reviews {
     @ManyToOne(fetch = FetchType.LAZY)
     private Stores stores;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Orders orders;
 
     public Reviews(ReviewRequestDto requestDto, Users users, Stores stores, Orders orders){

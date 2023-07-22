@@ -5,9 +5,7 @@ import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.image.ImageUploader;
 import com.dia.delivery.common.jwt.JwtUtil;
 import com.dia.delivery.user.UserRoleEnum;
-import com.dia.delivery.user.dto.AuthRequestDto;
-import com.dia.delivery.user.dto.DeleteRequestDto;
-import com.dia.delivery.user.dto.ProfileResponseDto;
+import com.dia.delivery.user.dto.*;
 import com.dia.delivery.user.entity.Users;
 import com.dia.delivery.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -33,7 +31,6 @@ import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Service
-
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -99,26 +96,6 @@ public class UserService {
         Users user = new Users(username, password, passwordDecoded, password2, password3, email, role);
         userRepository.save(user);
     }
-
-
-//    public void login(LoginRequestDto requestDto) {
-//        String username = requestDto.getUsername();
-//        String password = requestDto.getPassword();
-//
-//        //사용자 확인 (username 이 없는 경우)
-//        Users user = userRepository.findByUsername(username).orElseThrow(
-//                () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-//        );
-//
-//        //비밀번호 확인 (password 가 다른 경우)
-//        if(!passwordEncoder.matches(password, user.getPassword())) {
-//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-//        }
-//    }
-
-//    public void delete(Long id) {
-//        userRepository.deleteById(id);
-//    }
 
     @Transactional
     public ResponseEntity<ApiResponseDto> changeUserInfo(MultipartFile profilePic, String introduction, String password, Users user) throws IOException {
@@ -207,6 +184,20 @@ public class UserService {
             }
         }
         return key.toString();
+    }
+
+    @Transactional(readOnly = true)
+    public UserInfoDto getUserInfo(Users user) {
+        Users users = userRepository.findById(user.getId()).orElseThrow(()-> new IllegalArgumentException("회원정보가 없습니다."));
+        String username = user.getUsername();
+        boolean isOwner = user.getRole().equals(UserRoleEnum.OWNER);
+        return new UserInfoDto(username, isOwner);
+    }
+
+    @Transactional(readOnly = true)
+    public UserProfileDto getUserProfile(Users user) {
+        Users users = userRepository.findById(user.getId()).orElseThrow(()-> new IllegalArgumentException("회원정보가 없습니다."));
+        return new UserProfileDto(users);
     }
 }
 

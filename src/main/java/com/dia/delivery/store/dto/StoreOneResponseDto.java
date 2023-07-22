@@ -10,6 +10,7 @@ import java.util.List;
 
 @Getter
 public class StoreOneResponseDto {
+    private Long storeId;
     private String name;
     private String introduction;
     private String imageUrl;
@@ -18,6 +19,7 @@ public class StoreOneResponseDto {
     private List<ProductResponseDto> productResponseDtoList;
     private List<ReviewResponseDto> reviewsList;
     public StoreOneResponseDto(Stores store) {
+        this.storeId = store.getId();
         this.name = store.getName();
         this.introduction = store.getIntroduction();
         this.imageUrl = store.getImageUrl();

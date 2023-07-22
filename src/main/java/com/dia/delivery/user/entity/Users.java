@@ -52,9 +52,9 @@ public class Users {
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Stores> storesList = new ArrayList<>();
-    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Reviews> reviewsList = new ArrayList<>();
-    @OneToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "users", cascade = CascadeType.REMOVE)
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
     @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Orders> ownerOrders = new ArrayList<>();

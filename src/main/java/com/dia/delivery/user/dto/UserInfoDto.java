@@ -10,14 +10,9 @@ public class UserInfoDto {
     private String username;
     //  boolean isAdmin;
     private boolean isOwner;
-    private int scrapNum;
-    private int reviewNum;
 
-    public UserInfoDto(Users user) {
-        this.username = user.getUsername();
-        this.isOwner = (user.getRole().equals(UserRoleEnum.OWNER));
-        System.out.println(isOwner());
-        this.reviewNum = user.getReviewsList().size();
-        this.scrapNum = user.getUserScrapStoreList().size();
+    public UserInfoDto(String username, boolean isOwner) {
+        this.username = username;
+        this.isOwner = isOwner;
     }
 }

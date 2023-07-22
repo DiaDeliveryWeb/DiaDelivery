@@ -4,6 +4,7 @@ import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.security.UserDetailsImpl;
 import com.dia.delivery.store.dto.*;
 import com.dia.delivery.store.service.StoreService;
+import com.dia.delivery.user.entity.Users;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,12 @@ public class StoreController {
     @GetMapping("/mystores")
     public List<StoreResponseDto> getMyStores(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return storeService.getMyStores(userDetails.getUser());
+    }
+
+    @GetMapping("/stores/scrap")
+    public List<StoreResponseDto> getMyScrapStores(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        Users user = userDetails.getUser();
+        return storeService.getScrapStores(user);
     }
 
     // 가게 상세 조회

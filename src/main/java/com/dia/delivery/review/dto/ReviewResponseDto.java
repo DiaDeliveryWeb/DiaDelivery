@@ -10,8 +10,10 @@ public class ReviewResponseDto {
     private String imageUrl;
 
     public ReviewResponseDto(Reviews reviews){
-        this.content = reviews.getContent();
-        this.rate = reviews.getRate();
-        this.imageUrl = reviews.getImageUrl();
+        if (reviews != null) {
+            this.content = reviews.getContent();
+            this.rate = reviews.getRate();
+            this.imageUrl = reviews.getImageUrl();
+        }
     }
 }

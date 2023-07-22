@@ -21,6 +21,11 @@ public class OrderController {
     public List<OrderResponseDto> findAll(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return orderService.findAll(userDetails.getUser());
     }
+    @GetMapping("/order")
+    public OrderResponseDto findOne(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam String orderNum){
+        return orderService.findOne(userDetails.getUser(), orderNum);
+    }
+
     @PostMapping("/orders")
     public OrderResponseDto save(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody OrderRequestDto requestDto){
         return orderService.save(userDetails.getUser(), requestDto);

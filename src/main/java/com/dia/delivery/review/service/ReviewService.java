@@ -1,6 +1,7 @@
 package com.dia.delivery.review.service;
 
 import com.dia.delivery.common.image.ImageUploader;
+import com.dia.delivery.order.OrderStatus;
 import com.dia.delivery.order.entity.Orders;
 import com.dia.delivery.order.repository.OrderRepository;
 import com.dia.delivery.review.dto.ReviewRequestDto;
@@ -53,6 +54,9 @@ public class ReviewService {
                         "Already write Review",
                         Locale.getDefault()
                 ));
+        if(!orders.getOrderStatus().equals(OrderStatus.주문완료)){
+            throw new IllegalArgumentException("완료된 주문에만 리뷰를 작성할 수 있습니다.");
+        }
         Stores stores = orders.getProductOrdersList().get(0).getProducts().getStores();
         return new ReviewResponseDto(reviewRepository.save(new Reviews(requestDto, user, stores, orders)));
     }
