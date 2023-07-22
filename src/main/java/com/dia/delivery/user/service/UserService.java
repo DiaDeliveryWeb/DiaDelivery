@@ -42,9 +42,8 @@ public class UserService {
     private final MessageSource messageSource;
     private final JavaMailSender javaMailSender;
 
-    // ADMIN_TOKEN
+    // OWNER_TOKEN
     private final String OWNER_TOKEN = "1111";
- //   private final String ADMIN_TOKEN = "2222";
 
 
     public void signup(AuthRequestDto requestDto) {
