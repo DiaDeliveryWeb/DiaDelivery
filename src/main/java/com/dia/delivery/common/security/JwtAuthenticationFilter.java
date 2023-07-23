@@ -5,12 +5,15 @@ import com.dia.delivery.common.advice.ApiResponseDto;
 import com.dia.delivery.common.jwt.JwtUtil;
 import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.AuthRequestDto;
+import com.dia.delivery.user.entity.Users;
+import com.dia.delivery.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,12 +21,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import java.io.IOException;
 
+import static com.dia.delivery.user.UserBlockEnum.차단;
+
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
-
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    private final UserRepository userRepository;
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
         setFilterProcessesUrl("/users/login");
     }
 
@@ -32,6 +38,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("로그인 시도");
         try {
             AuthRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), AuthRequestDto.class);
+            Users user = userRepository.findByUsername(requestDto.getUsername()).orElseThrow(()-> new IllegalArgumentException("유저가 없습니다."));
+            if (user.getStatus().equals(차단)) {
+                ApiResponseDto apiResponseDto = new ApiResponseDto("차단된 회원입니다.", HttpStatus.BAD_REQUEST.value());
+                response.setStatus(HttpStatus.BAD_REQUEST.value());
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                String json = new ObjectMapper().writeValueAsString(apiResponseDto);
+                response.getWriter().write(json);
+                return null;
+            }
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestDto.getUsername(),

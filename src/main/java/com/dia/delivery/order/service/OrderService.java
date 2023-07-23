@@ -59,7 +59,7 @@ public class OrderService {
                         Locale.getDefault()
                 )
         ));
-        if (!orders.getUser().getId().equals(user.getId())){
+        if (!orders.getOwner().getId().equals(user.getId())){
             throw new IllegalArgumentException("주문하신 회원이 아닙니다.");
         }
         orders.setOrderStatus(OrderStatus.주문완료);
