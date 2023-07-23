@@ -1,5 +1,6 @@
 package com.dia.delivery.common.config;
 
+import com.dia.delivery.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -38,7 +39,7 @@ public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final ObjectMapper objectMapper;
     private final AuthenticationConfiguration authenticationConfiguration;
-  
+    private final UserRepository userRepository;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -54,7 +55,7 @@ public class WebSecurityConfig {
     }
 
      public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, userRepository);
          filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
          return filter;
      }

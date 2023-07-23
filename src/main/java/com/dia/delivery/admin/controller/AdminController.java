@@ -1,9 +1,6 @@
 package com.dia.delivery.admin.controller;
 
-import com.dia.delivery.admin.dto.OfficeOrderResponseDto;
-import com.dia.delivery.admin.dto.OfficeReviewResponseDto;
-import com.dia.delivery.admin.dto.TokenRequestDto;
-import com.dia.delivery.admin.dto.OfficeUserResponseDto;
+import com.dia.delivery.admin.dto.*;
 import com.dia.delivery.admin.service.AdminService;
 import com.dia.delivery.common.dto.ApiResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +32,12 @@ public class AdminController {
     @GetMapping("/office/review")
     public List<OfficeReviewResponseDto> getReview() {
         return adminService.getReview();
+    }
+
+    @PutMapping("/office/block")
+    public void blockUser(@RequestBody OfficeBlockRequestDto requestDto) {
+        System.out.println("들어옴");
+        System.out.println(requestDto.getUsername());
+        adminService.blockUser(requestDto.getUsername());
     }
 }

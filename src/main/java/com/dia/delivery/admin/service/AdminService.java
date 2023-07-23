@@ -15,8 +15,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
+
+import static com.dia.delivery.user.UserBlockEnum.차단;
 
 @Service
 @AllArgsConstructor
@@ -49,5 +53,14 @@ public class AdminService {
         List<Reviews> reviewList = reviewRepository.findAll();
         return reviewList.stream().map(reviews -> new OfficeReviewResponseDto(reviews.getUsers().getUsername(), reviews.getOrders().getOrderNum(),
                 reviews.getContent(), reviews.getRate())).toList();
+    }
+
+    @Transactional
+    public void blockUser(String username) {
+        Users user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException(
+                "유저가 없습니다."
+                ));
+        System.out.println(user.getUsername());
+        user.setStatus(차단);
     }
 }

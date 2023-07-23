@@ -4,6 +4,7 @@ package com.dia.delivery.user.service;
 import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.image.ImageUploader;
 import com.dia.delivery.common.jwt.JwtUtil;
+import com.dia.delivery.user.UserBlockEnum;
 import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.*;
 import com.dia.delivery.user.entity.Users;
@@ -89,7 +90,6 @@ public class UserService {
             }
             role = UserRoleEnum.OWNER;
         }
-
 
         // 사용자 등록
         Users user = new Users(username, password, passwordDecoded, password2, password3, email, role);
