@@ -5,6 +5,7 @@ import com.dia.delivery.user.UserRoleEnum;
 import com.dia.delivery.user.dto.*;
 import com.dia.delivery.common.dto.ApiResponseDto;
 import com.dia.delivery.common.security.UserDetailsImpl;
+import com.dia.delivery.user.service.RegisterEmail;
 import com.dia.delivery.user.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -33,10 +34,9 @@ public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final MessageSource messageSource;
-
-
+    private final RegisterEmail registerMail;
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponseDto> signup(@RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
+    public void signup(@Valid @RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if (fieldErrors.size() > 0) {
@@ -51,13 +51,6 @@ public class UserController {
         userService.signup(requestDto);
         return ResponseEntity.ok(new ApiResponseDto("회원가입 완료",200));
     }
-
-
-    @PostMapping("/email-auth")
-    public String sendMail(@RequestBody EmailAuthRequestDto requestDto) throws MessagingException {
-        return  userService.sendMail(requestDto.getEmail());
-    }
-
 
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
@@ -97,6 +90,14 @@ public class UserController {
     public ResponseEntity<ProfileResponseDto> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getProfile(userDetails.getUser());
     }
+
+<
+
+    @PostMapping("/login/mailConfirm")
+    public String mailConfirm(@RequestBody EmailAuthRequestDto requestDto) throws Exception {
+        return  registerMail.sendSimpleMessage(requestDto.getEmail());
+    }
+
 }
 
 
