@@ -36,7 +36,7 @@ public class UserController {
     private final MessageSource messageSource;
     private final RegisterEmail registerMail;
     @PostMapping("/signup")
-    public void signup(@Valid @RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
+    public ResponseEntity<ApiResponseDto> signup(@Valid @RequestBody AuthRequestDto requestDto, BindingResult bindingResult) {
         // Validation 예외처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if (fieldErrors.size() > 0) {
@@ -91,7 +91,6 @@ public class UserController {
         return userService.getProfile(userDetails.getUser());
     }
 
-<
 
     @PostMapping("/login/mailConfirm")
     public String mailConfirm(@RequestBody EmailAuthRequestDto requestDto) throws Exception {
