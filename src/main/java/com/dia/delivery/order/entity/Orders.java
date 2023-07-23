@@ -38,7 +38,7 @@ public class Orders extends Timestamped {
     @JoinColumn(nullable = false)
     private Users user;
 
-    @OneToMany(mappedBy = "orders")
+    @OneToMany(mappedBy = "orders", orphanRemoval = true)
     private List<ProductOrders> productOrdersList = new ArrayList<>();
 
     @OneToOne(mappedBy = "orders", orphanRemoval = true)

@@ -31,7 +31,7 @@ public class Products {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "products", orphanRemoval = true)
+    @OneToMany(mappedBy = "products", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProductOrders> productOrdersList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
