@@ -15,7 +15,7 @@
   - 가게별 스크랩 추가 및 취소 기능 구현
   
 2. API 명세서
-api 명세서 PostMan활용 온라인 게시 : [https://documenter.getpostman.com/view/9928633/2s946eBZJQ](https://documenter.getpostman.com/view/20770413/2s946maAKL#daa201cb-42bf-47a2-bf00-96a6c75f16d3)
+   PostMan활용 온라인 게시 : [https://documenter.getpostman.com/view/9928633/2s946eBZJQ](https://documenter.getpostman.com/view/20770413/2s946maAKL#daa201cb-42bf-47a2-bf00-96a6c75f16d3)
 
 3. ERD (개체-관계 다이어그램)
 
