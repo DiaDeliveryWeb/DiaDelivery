@@ -37,7 +37,7 @@ public class Stores {
     @OneToMany(mappedBy = "stores", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Reviews> reviewsList = new ArrayList<>();
   
-    @OneToMany(mappedBy = "stores")
+    @OneToMany(mappedBy = "stores", orphanRemoval = true)
     private List<UserScrapStore> userScrapStoreList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
